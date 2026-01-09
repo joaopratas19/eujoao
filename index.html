@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comando João - Rumo à GNR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --azul-escuro: #0a192f;
+            --verde-gnr: #1b4332;
+            --neon-green: #52b788;
+            --text-light: #e0e0e0;
+            --accent-gold: #ffcc00;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--azul-escuro);
+            color: var(--text-light);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        header {
+            width: 100%;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--azul-escuro), var(--verde-gnr));
+            text-align: center;
+            border-bottom: 2px solid var(--neon-green);
+        }
+
+        h1 { font-family: 'Orbitron', sans-serif; margin: 0; color: var(--neon-green); }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 15px;
+            border: 1px solid var(--neon-green);
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active { background: var(--neon-green); color: var(--azul-escuro); font-weight: bold; }
+
+        .container { width: 95%; max-width: 900px; margin: auto; }
+
+        .page { display: none; animation: fadeIn 0.5s; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--neon-green);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        th, td { padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        th { background: var(--verde-gnr); }
+
+        .input-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        input { flex: 1; padding: 10px; border-radius: 4px; border: none; min-width: 120px; }
+
+        .btn-action {
+            background: var(--neon-green);
+            color: var(--azul-escuro);
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        #motivationDisplay {
+            text-align: center;
+            font-style: italic;
+            color: var(--accent-gold);
+            height: 30px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .prog-diaria { color: var(--neon-green); font-size: 0.9em; margin-bottom: 10px; }
+        
+        canvas { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>TREINO DO JOÃO</h1>
+    <div id="motivationDisplay">Pronto para a instrução?</div>
+</header>
+
+<nav>
+    <button class="tab-btn active" onclick="showPage('home')">🏠 Home</button>
+    <button class="tab-btn" onclick="showPage('abdominais')">💪 Abdominais</button>
+    <button class="tab-btn" onclick="showPage('barras')">🦾 Barras</button>
+    <button class="tab-btn" onclick="showPage('corrida')">🏃 Corrida</button>
+    <button class="tab-btn" onclick="showPage('gerador')">🤖 IA Gerador</button>
+</nav>
+
+<div class="container">
+    
+    <div id="home" class="page active">
+        <div class="card">
+            <h3>📈 Evolução de Resistência</h3>
+            <canvas id="resilienceChart"></canvas>
+        </div>
+        <div class="card" style="text-align:center;">
+            <h3>Consistência Semanal</h3>
+            <div id="statusCircle" style="font-size: 3rem;">🏋️‍♂️</div>
+            <p id="percentText">0% Concluído</p>
+        </div>
+    </div>
+
+    <div id="abdominais" class="page">
+        <div class="card">
+            <h3>📅 Plano da Semana: Abdominais</h3>
+            <div class="prog-diaria">Seg: 3x Max | Ter: 3x Max | Qua: Descanso | Qui: 4x Max | Sex: Teste 1min | Sáb: 3x Max</div>
+            <div class="input-group">
+                <input type="number" id="valAbs" placeholder="Qtd realizada">
+                <button class="btn-action" onclick="save('abdominais')">Gravar</button>
+            </div>
+            <table id="tableAbdominais">
+                <thead><tr><th>Data</th><th>Resultado</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="barras" class="page">
+        <div class="card">
+            <h3>📅 Plano da Semana: Barras</h3>
+            <div class="prog-diaria">Seg: 20 Negativas | Ter: 20 Negativas | Qua: Descanso | Qui: 25 Negativas | Sex: Tentativa Max | Sáb: Suspensão</div>
+            <div class="input-group">
+                <input type="number" id="valBarras" placeholder="Qtd ou Segundos">
+                <button class="btn-action" onclick="save('barras')">Gravar</button>
+            </div>
+            <table id="tableBarras">
+                <thead><tr><th>Data</th><th>Resultado</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="corrida" class="page">
+        <div class="card">
+            <h3>📅 Plano da Semana: Corrida</h3>
+            <div class="prog-diaria">Seg: 20min Lento | Ter: 10x100m | Qua: Descanso | Qui: 30min Lento | Sex: Cooper Test | Sáb: 20min Lento</div>
+            <div class="input-group">
+                <input type="number" id="valCorrida" placeholder="Metros">
+                <button class="btn-action" onclick="save('corrida')">Gravar</button>
+            </div>
+            <table id="tableCorrida">
+                <thead><tr><th>Data</th><th>Metros</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="gerador" class="page">
+        <div class="card ai-box">
+            <h3>Análise Inteligente GNR</h3>
+            <div id="aiOutput">Aguarda pelo final da semana para gerar novos dados...</div>
+            <button class="btn-action" style="width:100%; margin-top:15px;" onclick="generateAI()">GERAR PRÓXIMA SEMANA</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const frases = [
+        "Para que outros possam viver! 🇵🇹",
+        "A disciplina é a tua melhor arma.",
+        "O suor no treino poupa o sangue na batalha.",
+        "A asma não te trava, o medo sim. Continua!",
+        "Um dia serás tu a envergar a farda. Não desistas!",
+        "Foco na meta, a GNR espera por ti!",
+        "Mais uma repetição, menos um obstáculo."
+    ];
+
+    let chart;
+
+    function showPage(id) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+        if(id === 'home') initChart();
+    }
+
+    function save(tipo) {
+        const val = document.getElementById('val' + tipo.charAt(0).toUpperCase() + tipo.slice(1)).value;
+        if(!val) return;
+
+        const entry = { date: new Date().toLocaleDateString('pt-PT'), value: val };
+        let logs = JSON.parse(localStorage.getItem('gnr_' + tipo) || "[]");
+        logs.push(entry);
+        localStorage.setItem('gnr_' + tipo, JSON.stringify(logs));
+
+        // Feedback visual e sonoro (simulado)
+        document.getElementById('motivationDisplay').innerText = "🔥 " + frases[Math.floor(Math.random() * frases.length)];
+        
+        renderTables();
+        updateHome();
+    }
+
+    function renderTables() {
+        ['abdominais', 'barras', 'corrida'].forEach(tipo => {
+            const logs = JSON.parse(localStorage.getItem('gnr_' + tipo) || "[]");
+            const tbody = document.querySelector(`#table${tipo.charAt(0).toUpperCase() + tipo.slice(1)} tbody`);
+            tbody.innerHTML = logs.map(l => `<tr><td>${l.date}</td><td>${l.value}</td></tr>`).reverse().join('');
+        });
+    }
+
+    function updateHome() {
+        const logsCorrida = JSON.parse(localStorage.getItem('gnr_corrida') || "[]");
+        const total = (JSON.parse(localStorage.getItem('gnr_abdominais') || "[]").length > 0 ? 1 : 0) +
+                      (JSON.parse(localStorage.getItem('gnr_barras') || "[]").length > 0 ? 1 : 0) +
+                      (logsCorrida.length > 0 ? 1 : 0);
+        
+        let perc = Math.round((total / 3) * 100);
+        document.getElementById('percentText').innerText = `${perc}% da Base Semanal Ativa`;
+        initChart();
+    }
+
+    function initChart() {
+        const ctx = document.getElementById('resilienceChart').getContext('2d');
+        const logs = JSON.parse(localStorage.getItem('gnr_corrida') || "[]");
+        
+        if(chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: logs.map(l => l.date),
+                datasets: [{
+                    label: 'Resistência (Metros)',
+                    data: logs.map(l => l.value),
+                    borderColor: '#52b788',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(82, 183, 136, 0.1)'
+                }]
+            },
+            options: { responsive: true, scales: { y: { beginAtZero: false } } }
+        });
+    }
+
+    function generateAI() {
+        const logs = JSON.parse(localStorage.getItem('gnr_corrida') || "[]");
+        if(logs.length < 2) {
+            document.getElementById('aiOutput').innerText = "Precisas de pelo menos 2 registos de corrida para eu calcular a tua progressão.";
+            return;
+        }
+        const ultima = parseInt(logs[logs.length-1].value);
+        document.getElementById('aiOutput').innerHTML = `
+            <h4 style="color:var(--neon-green)">RELATÓRIO DE INSTRUÇÃO:</h4>
+            <p>Evolução detetada. Próxima semana: Meta de <strong>${ultima + 50} metros</strong>.</p>
+            <p>Foco: Aumentar intensidade nas barras em 5%.</p>
+        `;
+    }
+
+    window.onload = () => {
+        renderTables();
+        updateHome();
+    };
+</script>
+</body>
+</html>
