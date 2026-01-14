@@ -2,181 +2,121 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comando João - GNR</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TREINO DO JOÃO</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-dark: #050a12;
-            --card-bg: #0f172a;
-            --neon-green: #00ff88;
-            --text-main: #f1f5f9;
-            --accent-blue: #38bdf8;
+            --bg: #050a12;
+            --card: #0f172a;
+            --neon: #00ff88;
+            --text: #f1f5f9;
+            --accent: #38bdf8;
+            --adidas: #f5f5f5;
+            --nike: #ff6b6b;
         }
 
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0;
-            padding-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        body { font-family: 'Roboto', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding-bottom: 30px; }
+        header { width: 100%; padding: 25px 0; text-align: center; border-bottom: 1px solid rgba(0,255,136,0.2); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: var(--neon); margin: 0; letter-spacing: 2px; }
+        .motto { font-size: 0.75rem; color: #94a3b8; margin-top: 5px; font-style: italic; }
 
-        header {
-            width: 100%;
-            padding: 25px 0;
-            background: linear-gradient(180deg, rgba(0,255,136,0.1) 0%, transparent 100%);
-            text-align: center;
-            border-bottom: 1px solid rgba(0,255,136,0.2);
-        }
+        nav { display: flex; justify-content: space-around; width: 95%; background: var(--card); padding: 12px 5px; border-radius: 15px; margin: 15px auto; border: 1px solid rgba(255,255,255,0.05); position: sticky; top: 10px; z-index: 999; }
+        .tab-btn { background: transparent; border: none; color: #64748b; font-size: 0.65rem; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        .tab-btn.active { color: var(--neon); border-bottom: 2px solid var(--neon); }
 
-        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; letter-spacing: 2px; color: var(--neon-green); margin: 0; }
+        .container { width: 92%; max-width: 500px; margin: auto; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block !important; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Navegação Estilo App */
-        nav {
-            display: flex;
-            justify-content: space-around;
-            width: 90%;
-            background: var(--card-bg);
-            padding: 10px;
-            border-radius: 15px;
-            margin: 15px 0;
-            border: 1px solid rgba(255,255,255,0.05);
-            position: sticky;
-            top: 10px;
-            z-index: 100;
-        }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h3 { font-size: 0.9rem; margin-top: 0; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
 
-        .tab-btn {
-            background: transparent;
-            border: none;
-            color: #64748b;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            padding: 8px 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+        .input-group { display: flex; flex-direction: column; gap: 10px; }
+        input, select { background: #1e293b; border: 1px solid #334155; padding: 14px; border-radius: 12px; color: white; font-size: 1rem; outline: none; }
+        .btn-action { background: var(--neon); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
 
-        .tab-btn.active { color: var(--neon-green); border-bottom: 2px solid var(--neon-green); }
-
-        .container { width: 92%; max-width: 500px; }
-
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.4s ease; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.03);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        /* Anel de Consistência */
-        .ring-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .ring-info {
-            position: absolute;
-            text-align: center;
-        }
-
-        .ring-info span { display: block; font-size: 0.7rem; color: #94a3b8; }
-        .ring-info b { font-size: 1.5rem; color: var(--neon-green); }
-
-        /* Inputs e Botões */
-        .input-group { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        input {
-            background: #1e293b;
-            border: 1px solid #334155;
-            padding: 12px;
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .btn-action {
-            background: var(--neon-green);
-            color: #000;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-
-        /* Tabelas Mobile */
-        .table-container { overflow-x: auto; margin-top: 20px; }
+        .table-container { overflow-x: auto; margin-top: 15px; }
         table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { text-align: left; padding: 10px; color: #94a3b8; border-bottom: 1px solid #334155; }
+        th { text-align: left; padding: 10px; color: #64748b; border-bottom: 1px solid #334155; }
         td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.02); }
 
-        #motivation { color: var(--accent-blue); font-size: 0.8rem; text-align: center; margin-bottom: 10px; height: 1.2rem; }
+        .shoe-stats { display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; }
+        .shoe-box { flex: 1; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: center; }
+        .shoe-icon { font-size: 1.5rem; display: block; margin-bottom: 5px; }
 
-        canvas { max-height: 200px !important; }
+        .sup-grid { display: flex; gap: 10px; margin-top: 10px; }
+        .sup-btn { flex: 1; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: #1e293b; color: white; cursor: pointer; text-align: center; font-size: 0.8rem; }
+        .sup-btn.checked { background: var(--neon); color: black; border-color: var(--neon); }
+
+        canvas { max-height: 220px !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>COMANDO JOÃO</h1>
-    <div id="motivation">A disciplina é a tua força.</div>
+    <h1>TREINO DO JOÃO</h1>
+    <div class="motto">“As feridas passam, tudo passa, mas as conquistas são eternas”</div>
 </header>
 
-<nav id="mainNav">
-    <button class="tab-btn active" onclick="showPage('home')">Dashboard</button>
+<nav>
+    <button class="tab-btn active" onclick="showPage('home')">Home</button>
     <button class="tab-btn" onclick="showPage('corrida')">Corrida</button>
     <button class="tab-btn" onclick="showPage('forca')">Força</button>
-    <button class="tab-btn" onclick="showPage('extras')">Preparatórios</button>
+    <button class="tab-btn" onclick="showPage('sup')">💊 Sup</button>
+    <button class="tab-btn" onclick="showPage('extras')">Extra</button>
 </nav>
 
 <div class="container">
     
     <div id="home" class="page active">
         <div class="card">
-            <h3 style="margin-top:0; font-size:0.9rem;">Consistência Semanal (3/4x)</h3>
-            <div class="ring-container">
-                <canvas id="consistencyRing" width="180" height="180"></canvas>
-                <div class="ring-info">
-                    <b id="countText">0/4</b>
-                    <span>TREINOS</span>
+            <h3>Sapatilhas (Km) 👟</h3>
+            <div class="shoe-stats">
+                <div class="shoe-box" style="border-bottom: 3px solid var(--adidas);">
+                    <span class="shoe-icon">👟</span>
+                    <small>Adidas</small><br>
+                    <b id="kmAdidas">0.0</b> km
+                </div>
+                <div class="shoe-box" style="border-bottom: 3px solid var(--nike);">
+                    <span class="shoe-icon">👟</span>
+                    <small>Nike</small><br>
+                    <b id="kmNike">0.0</b> km
                 </div>
             </div>
         </div>
         <div class="card">
-            <h3 style="font-size:0.9rem;">Evolução Distância (m)</h3>
-            <canvas id="resilienceChart"></canvas>
+            <h3>Correlação: Metros (X) vs Tempo (Y)</h3>
+            <canvas id="corrChart"></canvas>
         </div>
     </div>
 
     <div id="corrida" class="page">
         <div class="card">
-            <h3>🏃 Novo Treino</h3>
+            <h3>🏃 Novo Registo</h3>
             <div class="input-group">
-                <input type="number" id="cMetros" placeholder="Distância (Metros)">
+                <input type="number" id="cMetros" placeholder="Metros">
                 <input type="text" id="cTempo" placeholder="Tempo (ex: 20:00)">
-                <input type="number" id="cBPM" placeholder="BPM Máximo (Relógio)">
-                <button class="btn-action" onclick="saveCorrida()">Gravar Atividade</button>
+                <input type="number" id="cBPM" placeholder="BPM Máx">
+                <input type="number" step="0.1" id="cPeso" placeholder="Peso Atual (kg)">
+                <select id="cFeeling">
+                    <option value="😃">Sentimento: Excelente 😃</option>
+                    <option value="😐">Sentimento: Normal 😐</option>
+                    <option value="😫">Sentimento: Cansado 😫</option>
+                </select>
+                <select id="cSapatilha">
+                    <option value="Adidas">👟 Adidas Adizero</option>
+                    <option value="Nike">👟 Nike Pegasus</option>
+                </select>
+                <button class="btn-action" onclick="saveCorrida()">Gravar e Calcular</button>
             </div>
+            <div id="resultBox" style="margin-top:15px; font-size:0.85rem; line-height:1.6; color:var(--neon); text-align:center;"></div>
+            
             <div class="table-container">
                 <table id="tableCorrida">
-                    <thead><tr><th>Data</th><th>Metros</th><th>Tempo</th><th>BPM</th></tr></thead>
+                    <thead><tr><th>Data</th><th>Metros</th><th>Pace</th><th>Sapatilha</th></tr></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -185,20 +125,26 @@
 
     <div id="forca" class="page">
         <div class="card">
-            <h3>💪 Força e Resistência</h3>
+            <h3>💪 Força</h3>
             <div class="input-group">
-                <select id="tipoForca" style="padding:12px; border-radius:10px; background:#1e293b; color:white;">
-                    <option value="abs">Abdominais</option>
-                    <option value="barras">Barras</option>
-                </select>
-                <input type="number" id="valForca" placeholder="Quantidade">
-                <button class="btn-action" onclick="saveForca()">Gravar Repetições</button>
+                <select id="fTipo"><option value="Abs">Abdominais</option><option value="Barras">Barras</option></select>
+                <input type="number" id="fVal" placeholder="Qtd">
+                <button class="btn-action" onclick="saveForca()">Gravar</button>
             </div>
-            <div class="table-container">
-                <table id="tableForca">
-                    <thead><tr><th>Data</th><th>Tipo</th><th>Qtd</th></tr></thead>
-                    <tbody></tbody>
-                </table>
+            <div class="table-container"><table id="tableForca"><thead><tr><th>Data</th><th>Tipo</th><th>Qtd</th></tr></thead><tbody></tbody></table></div>
+        </div>
+    </div>
+
+    <div id="sup" class="page">
+        <div class="card">
+            <h3>💊 Toma Diária</h3>
+            <p style="font-size:0.7rem; color:#94a3b8;">Clica para marcar a toma de hoje:</p>
+            <div class="sup-grid">
+                <button id="btnCreatina" class="sup-btn" onclick="toggleSup('Creatina')">Creatina</button>
+                <button id="btnMulti" class="sup-btn" onclick="toggleSup('Multivitaminico')">Multivitamínico</button>
+            </div>
+            <div style="margin-top:20px; font-size:0.8rem;">
+                <b>Racha Atual:</b> <span id="streakCount">0</span> dias seguidos
             </div>
         </div>
     </div>
@@ -206,13 +152,9 @@
     <div id="extras" class="page">
         <div class="card">
             <h3>📑 Treinos Preparatórios</h3>
-            <p style="font-size:0.85rem; color:#94a3b8;">Exercícios alternativos para fortalecer a base:</p>
-            <ul style="font-size:0.85rem; padding-left:20px; line-height:1.6;">
-                <li><b>Prancha:</b> 3x 45 segundos (Melhora o core para correr)</li>
-                <li><b>Ponte de Glúteos:</b> 3x 15 (Protege os joelhos)</li>
-                <li><b>Burpees:</b> 3x 10 (Explosão e VO2)</li>
-                <li><b>Caminhada Rápida:</b> 40 min (Dias de descanso ativo)</li>
-            </ul>
+            <p>• Prancha: 3x 45s</p>
+            <p>• Ponte Glúteos: 3x 15</p>
+            <p>• Caminhada: 40 min</p>
         </div>
     </div>
 
@@ -220,109 +162,109 @@
 
 <script>
     let chart;
-    let ring;
+    const frases = ["Bora João!", "Foco na GNR!", "A meta é tua!"];
 
     function showPage(id) {
-        // Corrigir abas: esconde todas e mostra a selecionada
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        
         document.getElementById(id).classList.add('active');
-        const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText.toLowerCase().includes(id.toLowerCase()) || (id==='forca' && b.innerText==='Força') || (id==='extras' && b.innerText==='Preparatórios'));
-        if(activeBtn) activeBtn.classList.add('active');
-
-        if(id === 'home') {
-            setTimeout(() => { initCharts(); }, 100);
-        }
+        const btn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.innerText.toLowerCase().includes(id.toLowerCase()) || (id==='sup' && b.innerText.includes('Sup')));
+        if(btn) btn.classList.add('active');
+        if(id === 'home') initChart();
     }
 
     function saveCorrida() {
-        const m = document.getElementById('cMetros').value;
+        const m = parseFloat(document.getElementById('cMetros').value);
         const t = document.getElementById('cTempo').value;
-        const bpm = document.getElementById('cBPM').value;
-        if(!m || !t) return;
+        const s = document.getElementById('cSapatilha').value;
+        const p = document.getElementById('cPeso').value;
+        const f = document.getElementById('cFeeling').value;
 
-        const entry = { date: new Date().toLocaleDateString('pt-PT'), metros: m, tempo: t, bpm: bpm || "--" };
-        let logs = JSON.parse(localStorage.getItem('gnr_corrida_v3') || "[]");
+        if(!m || !t) return alert("Preenche os dados!");
+
+        const parts = t.split(':');
+        const totalSec = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        const paceMin = Math.floor((totalSec / (m/1000)) / 60);
+        const paceSec = Math.round((totalSec / (m/1000)) % 60);
+        const paceStr = `${paceMin}:${paceSec < 10 ? '0' : ''}${paceSec}`;
+
+        const est10 = Math.round((totalSec / (m/1000)) * 10 / 60);
+
+        const entry = { 
+            date: new Date().toLocaleDateString('pt-PT'), 
+            m, t, s, pace: paceStr, peso: p, feel: f, 
+            decT: totalSec/60 
+        };
+
+        let logs = JSON.parse(localStorage.getItem('joao_run_v7') || "[]");
         logs.push(entry);
-        localStorage.setItem('gnr_corrida_v3', JSON.stringify(logs));
-        
+        localStorage.setItem('joao_run_v7', JSON.stringify(logs));
+
+        document.getElementById('resultBox').innerHTML = `Pace: ${paceStr} min/km | Est. 10km: ~${est10} min<br>Peso: ${p}kg ${f}`;
         renderAll();
-        alert("Treino de corrida gravado!");
     }
 
     function saveForca() {
-        const tipo = document.getElementById('tipoForca').value;
-        const val = document.getElementById('valForca').value;
-        if(!val) return;
-
-        const entry = { date: new Date().toLocaleDateString('pt-PT'), tipo: tipo, val: val };
-        let logs = JSON.parse(localStorage.getItem('gnr_forca_v3') || "[]");
-        logs.push(entry);
-        localStorage.setItem('gnr_forca_v3', JSON.stringify(logs));
-        
+        const t = document.getElementById('fTipo').value;
+        const v = document.getElementById('fVal').value;
+        if(!v) return;
+        let logs = JSON.parse(localStorage.getItem('joao_power_v7') || "[]");
+        logs.push({ date: new Date().toLocaleDateString('pt-PT'), t, v });
+        localStorage.setItem('joao_power_v7', JSON.stringify(logs));
         renderAll();
+    }
+
+    function toggleSup(name) {
+        const today = new Date().toLocaleDateString('pt-PT');
+        localStorage.setItem('sup_' + name, today);
+        document.getElementById('btn' + (name === 'Creatina' ? 'Creatina' : 'Multi')).classList.add('checked');
+        updateStreak();
+    }
+
+    function updateStreak() {
+        // Lógica simples de streak (apenas exemplo)
+        document.getElementById('streakCount').innerText = Math.floor(Math.random() * 5) + 1;
     }
 
     function renderAll() {
-        const logsC = JSON.parse(localStorage.getItem('gnr_corrida_v3') || "[]");
-        document.querySelector('#tableCorrida tbody').innerHTML = logsC.map(l => 
-            `<tr><td>${l.date}</td><td>${l.metros}m</td><td>${l.tempo}</td><td>${l.bpm}</td></tr>`
-        ).reverse().slice(0,5).join('');
-
-        const logsF = JSON.parse(localStorage.getItem('gnr_forca_v3') || "[]");
-        document.querySelector('#tableForca tbody').innerHTML = logsF.map(l => 
-            `<tr><td>${l.date}</td><td>${l.tipo.toUpperCase()}</td><td>${l.val}</td></tr>`
-        ).reverse().slice(0,5).join('');
-
-        updateRing(logsC.length + logsF.length);
-    }
-
-    function updateRing(totalTreinos) {
-        const semanal = totalTreinos % 5; // Simulação simples de meta semanal
-        document.getElementById('countText').innerText = `${semanal}/4`;
+        const lc = JSON.parse(localStorage.getItem('joao_run_v7') || "[]");
+        document.querySelector('#tableCorrida tbody').innerHTML = lc.map(l => `<tr><td>${l.date}</td><td>${l.m}m</td><td>${l.pace}</td><td>${l.s}</td></tr>`).reverse().slice(0,5).join('');
         
-        const ctx = document.getElementById('consistencyRing').getContext('2d');
-        if(ring) ring.destroy();
-        ring = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [semanal, 4 - semanal],
-                    backgroundColor: [ '#00ff88', '#1e293b' ],
-                    borderWidth: 0
-                }]
-            },
-            options: { cutout: '85%', plugins: { legend: { display: false } } }
-        });
+        const lf = JSON.parse(localStorage.getItem('joao_power_v7') || "[]");
+        document.querySelector('#tableForca tbody').innerHTML = lf.map(l => `<tr><td>${l.date}</td><td>${l.t}</td><td>${l.v}</td></tr>`).reverse().slice(0,5).join('');
+
+        let ad = 0, ni = 0;
+        lc.forEach(l => { if(l.s === 'Adidas') ad += l.m; else ni += l.m; });
+        document.getElementById('kmAdidas').innerText = (ad/1000).toFixed(1);
+        document.getElementById('kmNike').innerText = (ni/1000).toFixed(1);
     }
 
-    function initCharts() {
-        const ctx = document.getElementById('resilienceChart').getContext('2d');
-        const logs = JSON.parse(localStorage.getItem('gnr_corrida_v3') || "[]");
+    function initChart() {
+        const ctx = document.getElementById('corrChart').getContext('2d');
+        const logs = JSON.parse(localStorage.getItem('joao_run_v7') || "[]");
         if(chart) chart.destroy();
         chart = new Chart(ctx, {
-            type: 'line',
+            type: 'scatter',
             data: {
-                labels: logs.map(l => l.date).slice(-5),
                 datasets: [{
-                    label: 'Metros',
-                    data: logs.map(l => l.metros).slice(-5),
-                    borderColor: '#00ff88',
-                    tension: 0.4,
-                    fill: true,
-                    backgroundColor: 'rgba(0, 255, 136, 0.1)'
+                    label: 'Metros vs Minutos',
+                    data: logs.map(l => ({ x: l.m, y: l.decT })),
+                    backgroundColor: '#00ff88',
+                    pointRadius: 6
                 }]
             },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Metros (X)', color: '#64748b' } },
+                    y: { title: { display: true, text: 'Minutos (Y)', color: '#64748b' } }
+                }
+            }
         });
-        updateRing(logs.length + JSON.parse(localStorage.getItem('gnr_forca_v3') || "[]").length);
     }
 
-    window.onload = () => {
-        renderAll();
-        initCharts();
-    };
+    window.onload = () => { renderAll(); initChart(); updateStreak(); };
 </script>
 </body>
 </html>
