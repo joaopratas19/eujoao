@@ -8,9 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --bg: #020617; --panel: #0f172a; --neon: #00ff88; --accent: #38bdf8; --border: rgba(0, 255, 136, 0.3); --danger: #ff4757; }
-        
         body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #f8fafc; margin: 0; padding-bottom: 20px; }
-        
         header { padding: 20px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.5); }
         h1 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--neon); margin: 0; letter-spacing: 2px; }
         .motto { font-size: 0.65rem; color: var(--accent); margin-top: 5px; text-transform: uppercase; font-weight: 700; }
@@ -20,26 +18,23 @@
         .tab-btn.active { color: var(--neon); border-bottom: 2px solid var(--neon); }
 
         .container { width: 92%; max-width: 450px; margin: 15px auto; }
-        .page { display: none; }
+        
+        /* CORREÇÃO DAS ABAS */
+        .page { display: none; width: 100%; }
         .page.active { display: block !important; }
 
         .card { background: var(--panel); border: 1px solid var(--border); padding: 18px; border-radius: 4px; margin-bottom: 15px; }
         h3 { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--accent); margin: 0 0 15px 0; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
-
         .ring-container { display: flex; justify-content: center; align-items: center; position: relative; height: 160px; }
         .ring-info { position: absolute; text-align: center; }
         .ring-info b { font-family: 'Orbitron'; font-size: 2rem; color: var(--neon); }
-
         .input-group { display: flex; flex-direction: column; gap: 12px; }
         input, select, textarea { background: #020617; border: 1px solid #334155; padding: 14px; border-radius: 4px; color: white; font-family: inherit; font-size: 1rem; }
-        
         .btn-action { background: var(--neon); color: black; font-family: 'Orbitron'; font-weight: 800; padding: 16px; border: none; border-radius: 4px; margin-top: 5px; text-transform: uppercase; }
         .btn-danger { background: none; color: var(--danger); border: 1px solid var(--danger); font-family: 'Orbitron'; font-size: 0.5rem; padding: 8px; border-radius: 4px; margin-top: 15px; width: 100%; cursor: pointer; }
-
         .tech-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
         .tech-table th { color: var(--accent); text-align: left; padding: 10px; border-bottom: 2px solid var(--border); background: rgba(0,0,0,0.2); }
         .tech-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
         .shoe-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .shoe-card { background: rgba(0,0,0,0.3); padding: 15px; text-align: center; border: 1px solid var(--border); border-top: 3px solid var(--accent); }
     </style>
@@ -48,7 +43,7 @@
 
 <header>
     <h1>TREINO DO JOÃO</h1>
-    <div class="motto">“As feridas passam, tudo passa, mas as conquistas são eternas”</div>
+    <div class="motto">“Tudo passa, mas as conquistas são eternas”</div>
 </header>
 
 <nav>
@@ -61,7 +56,6 @@
 </nav>
 
 <div class="container">
-    
     <div id="home" class="page active">
         <div class="card">
             <h3>// MISSÃO SEMANAL</h3>
@@ -84,7 +78,7 @@
         <div class="card">
             <h3>// REGISTAR CORRIDA</h3>
             <div class="input-group">
-                <input type="number" id="rm" placeholder="Distância (Metros)">
+                <input type="number" id="rm" placeholder="Metros">
                 <input type="text" id="rt" placeholder="Tempo (ex: 20:00)">
                 <select id="rs"><option value="Adidas">Adidas Adizero</option><option value="Nike">Nike Pegasus</option></select>
                 <button class="btn-action" onclick="saveRun()">GRAVAR</button>
@@ -116,7 +110,7 @@
                 <thead><tr><th>Data</th><th>Peso</th><th>Estado</th></tr></thead>
                 <tbody id="diaryTable"></tbody>
             </table>
-            <button class="btn-danger" onclick="clearData('j_v16_d')">APAGAR HISTÓRICO DIÁRIO</button>
+            <button class="btn-danger" onclick="clearData('j_v17_d')">APAGAR HISTÓRICO</button>
         </div>
     </div>
 
@@ -131,7 +125,7 @@
                 <thead><tr><th>Data</th><th>Toma</th><th>Dose</th></tr></thead>
                 <tbody id="supTable"></tbody>
             </table>
-            <button class="btn-danger" onclick="clearData('j_v16_s')">APAGAR REGISTO SUPLEMENTOS</button>
+            <button class="btn-danger" onclick="clearData('j_v17_s')">APAGAR REGISTOS</button>
         </div>
     </div>
 
@@ -142,41 +136,48 @@
             <div id="iaRes" style="margin-top:15px; display:none; border:1px dashed var(--neon); padding:10px;"></div>
         </div>
     </div>
-
 </div>
 
 <script>
     let mChart, rChart;
 
     function openTab(evt, tabId) {
-        let pages = document.getElementsByClassName("page");
-        for (let i = 0; i < pages.length; i++) { pages[i].style.display = "none"; }
-        let btns = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
-        document.getElementById(tabId).style.display = "block";
+        // Esconde todas as páginas forçadamente
+        const pages = document.querySelectorAll(".page");
+        pages.forEach(p => { 
+            p.style.display = "none"; 
+            p.classList.remove("active");
+        });
+        
+        // Remove active de todos os botões
+        const btns = document.querySelectorAll(".tab-btn");
+        btns.forEach(b => b.classList.remove("active"));
+        
+        // Mostra apenas a selecionada
+        const target = document.getElementById(tabId);
+        target.style.display = "block";
+        target.classList.add("active");
         evt.currentTarget.classList.add("active");
+
         if(tabId === 'home') initCharts();
     }
 
     function clearData(key) {
-        if(confirm("Tens a certeza que queres apagar estes dados?")) {
-            localStorage.removeItem(key);
-            location.reload();
-        }
+        if(confirm("Apagar dados?")) { localStorage.removeItem(key); location.reload(); }
     }
 
     function saveRun() {
         const m = document.getElementById('rm').value, t = document.getElementById('rt').value, s = document.getElementById('rs').value;
         if(!m || !t) return;
         const pts = t.split(':'), sec = parseInt(pts[0])*60 + (parseInt(pts[1]) || 0);
-        let logs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
+        let logs = JSON.parse(localStorage.getItem('j_v17_r') || "[]");
         logs.push({ d: new Date().toLocaleDateString('pt-PT'), m: parseFloat(m), t, s, dec: sec/60 });
-        localStorage.setItem('j_v16_r', JSON.stringify(logs));
+        localStorage.setItem('j_v17_r', JSON.stringify(logs));
         location.reload();
     }
 
     function renderShoes() {
-        const logs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
+        const logs = JSON.parse(localStorage.getItem('j_v17_r') || "[]");
         let ad = 0, ni = 0;
         logs.forEach(l => { if(l.s === 'Adidas') ad += l.m; else ni += l.m; });
         document.getElementById('kAd').innerText = (ad/1000).toFixed(1);
@@ -186,65 +187,59 @@
     function savePower() {
         const t = document.getElementById('ft').value, q = document.getElementById('fq').value;
         if(!q) return;
-        let logs = JSON.parse(localStorage.getItem('j_v16_f') || "[]");
+        let logs = JSON.parse(localStorage.getItem('j_v17_f') || "[]");
         logs.push({ d: new Date().toLocaleDateString('pt-PT'), t, q });
-        localStorage.setItem('j_v16_f', JSON.stringify(logs));
-        alert("Força gravada!");
+        localStorage.setItem('j_v17_f', JSON.stringify(logs));
+        alert("Gravado!");
     }
 
     function saveSup() {
         const t = document.getElementById('st').value;
-        let logs = JSON.parse(localStorage.getItem('j_v16_s') || "[]");
+        let logs = JSON.parse(localStorage.getItem('j_v17_s') || "[]");
         logs.push({ d: new Date().toLocaleDateString('pt-PT'), t, dose: t.includes("Creatina") ? "5g" : "1 Un." });
-        localStorage.setItem('j_v16_s', JSON.stringify(logs));
+        localStorage.setItem('j_v17_s', JSON.stringify(logs));
         renderSup();
     }
 
     function renderSup() {
-        const logs = JSON.parse(localStorage.getItem('j_v16_s') || "[]");
+        const logs = JSON.parse(localStorage.getItem('j_v17_s') || "[]");
         document.getElementById('supTable').innerHTML = logs.reverse().slice(0,3).map(l => `<tr><td>${l.d}</td><td>${l.t}</td><td>${l.dose}</td></tr>`).join('');
     }
 
     function saveDiary() {
         const p = document.getElementById('dp').value, c = document.getElementById('dc').value, n = document.getElementById('dn').value;
         if(!p) return;
-        let logs = JSON.parse(localStorage.getItem('j_v16_d') || "[]");
+        let logs = JSON.parse(localStorage.getItem('j_v17_d') || "[]");
         logs.push({ d: new Date().toLocaleDateString('pt-PT'), p, c, n });
-        localStorage.setItem('j_v16_d', JSON.stringify(logs));
+        localStorage.setItem('j_v17_d', JSON.stringify(logs));
         renderDiary();
     }
 
     function renderDiary() {
-        const logs = JSON.parse(localStorage.getItem('j_v16_d') || "[]");
+        const logs = JSON.parse(localStorage.getItem('j_v17_d') || "[]");
         document.getElementById('diaryTable').innerHTML = logs.reverse().slice(0,3).map(l => `<tr><td>${l.d}</td><td>${l.p}kg</td><td>${l.c}</td></tr>`).join('');
     }
 
     function generateIA() {
-        const runs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
-        const power = JSON.parse(localStorage.getItem('j_v16_f') || "[]");
+        const runs = JSON.parse(localStorage.getItem('j_v17_r') || "[]");
+        const power = JSON.parse(localStorage.getItem('j_v17_f') || "[]");
         const res = document.getElementById('iaRes');
         res.style.display = "block";
         const total = (runs.length + power.length) % 5;
-        res.innerHTML = total < 3 ? `<b style="color:var(--danger)">ALERTA:</b> ${total}/4 treinos. Precisas de mais volume para os 10km.` : "<b>STATUS:</b> Consistência ideal.";
+        res.innerHTML = total < 3 ? `<b style="color:var(--danger)">ALERTA:</b> ${total}/4 treinos.` : "<b>STATUS:</b> Consistência ideal.";
     }
 
     function initCharts() {
-        const runs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
-        const power = JSON.parse(localStorage.getItem('j_v16_f') || "[]");
+        const runs = JSON.parse(localStorage.getItem('j_v17_r') || "[]");
+        const power = JSON.parse(localStorage.getItem('j_v17_f') || "[]");
         const total = (runs.length + power.length) % 5;
         document.getElementById('ringText').innerText = `${total}/4`;
-        
         const ctxR = document.getElementById('ringChart').getContext('2d');
         if(rChart) rChart.destroy();
         rChart = new Chart(ctxR, { type: 'doughnut', data: { datasets: [{ data: [total, 4-total], backgroundColor: ['#00ff88','#1e293b'], borderWidth:0 }] }, options: { cutout:'85%', plugins:{legend:{display:false}} }});
-
         const ctxM = document.getElementById('mainChart').getContext('2d');
         if(mChart) mChart.destroy();
-        mChart = new Chart(ctxM, {
-            type: 'scatter',
-            data: { datasets: [{ label: 'Performance', data: runs.map(l => ({ x: l.m, y: l.dec })), backgroundColor: '#00ff88' }] },
-            options: { scales: { x: { min: 0, max: 10000, title:{display:true, text:'Metros'} }, y: { min: 0, max: 60, title:{display:true, text:'Minutos'} } }, plugins: { legend: { display: false } } }
-        });
+        mChart = new Chart(ctxM, { type: 'scatter', data: { datasets: [{ label: 'Performance', data: runs.map(l => ({ x: l.m, y: l.dec })), backgroundColor: '#00ff88' }] }, options: { scales: { x: { min: 0, max: 10000, title:{display:true, text:'Metros'} }, y: { min: 0, max: 60, title:{display:true, text:'Minutos'} } }, plugins: { legend: { display: false } } } });
     }
 
     window.onload = () => { renderSup(); renderDiary(); renderShoes(); initCharts(); };
