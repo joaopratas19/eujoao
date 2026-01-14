@@ -25,84 +25,79 @@
 
         header {
             width: 100%;
-            padding: 30px 0;
+            padding: 20px 0;
             background: linear-gradient(135deg, var(--azul-escuro), var(--verde-gnr));
             text-align: center;
             border-bottom: 2px solid var(--neon-green);
         }
 
-        h1 { font-family: 'Orbitron', sans-serif; margin: 0; color: var(--neon-green); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.5rem; margin: 0; color: var(--neon-green); }
 
         nav {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin: 20px 0;
+            gap: 5px;
+            margin: 15px 0;
             flex-wrap: wrap;
         }
 
         .tab-btn {
-            padding: 10px 15px;
+            padding: 8px 10px;
+            font-size: 0.8rem;
             border: 1px solid var(--neon-green);
             background: transparent;
             color: white;
             cursor: pointer;
             border-radius: 4px;
-            transition: 0.3s;
         }
 
         .tab-btn.active { background: var(--neon-green); color: var(--azul-escuro); font-weight: bold; }
 
         .container { width: 95%; max-width: 900px; margin: auto; }
 
-        .page { display: none; animation: fadeIn 0.5s; }
-        .page.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .card {
             background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
+            padding: 15px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border-left: 5px solid var(--neon-green);
         }
 
+        /* Tabela Ajustada para Mobile */
+        .table-container { overflow-x: auto; }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            background: rgba(0,0,0,0.2);
+            font-size: 0.85rem;
         }
 
-        th, td { padding: 12px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        th, td { padding: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
         th { background: var(--verde-gnr); }
 
-        .input-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
-        input { flex: 1; padding: 10px; border-radius: 4px; border: none; min-width: 120px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+        input { width: 100%; padding: 12px; border-radius: 4px; border: none; box-sizing: border-box; background: #fff; color: #000; }
 
         .btn-action {
             background: var(--neon-green);
             color: var(--azul-escuro);
             border: none;
-            padding: 10px 20px;
+            padding: 12px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
+            margin-top: 5px;
         }
 
         #motivationDisplay {
             text-align: center;
-            font-style: italic;
+            font-size: 0.9rem;
             color: var(--accent-gold);
-            height: 30px;
             margin: 10px 0;
-            font-weight: bold;
+            min-height: 1.2rem;
         }
 
-        .prog-diaria { color: var(--neon-green); font-size: 0.9em; margin-bottom: 10px; }
-        
-        canvas { background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; }
+        canvas { background: rgba(0,0,0,0.3); border-radius: 8px; max-height: 250px; }
     </style>
 </head>
 <body>
@@ -114,76 +109,74 @@
 
 <nav>
     <button class="tab-btn active" onclick="showPage('home')">🏠 Home</button>
-    <button class="tab-btn" onclick="showPage('abdominais')">💪 Abdominais</button>
+    <button class="tab-btn" onclick="showPage('abdominais')">💪 Abs</button>
     <button class="tab-btn" onclick="showPage('barras')">🦾 Barras</button>
     <button class="tab-btn" onclick="showPage('corrida')">🏃 Corrida</button>
-    <button class="tab-btn" onclick="showPage('gerador')">🤖 IA Gerador</button>
 </nav>
 
 <div class="container">
     
     <div id="home" class="page active">
         <div class="card">
-            <h3>📈 Evolução de Resistência</h3>
+            <h3 style="font-size:1rem;">📈 Resistência (Metros)</h3>
             <canvas id="resilienceChart"></canvas>
-        </div>
-        <div class="card" style="text-align:center;">
-            <h3>Consistência Semanal</h3>
-            <div id="statusCircle" style="font-size: 3rem;">🏋️‍♂️</div>
-            <p id="percentText">0% Concluído</p>
         </div>
     </div>
 
     <div id="abdominais" class="page">
         <div class="card">
-            <h3>📅 Plano da Semana: Abdominais</h3>
-            <div class="prog-diaria">Seg: 3x Max | Ter: 3x Max | Qua: Descanso | Qui: 4x Max | Sex: Teste 1min | Sáb: 3x Max</div>
+            <h3>📅 Plano: Abdominais</h3>
             <div class="input-group">
                 <input type="number" id="valAbs" placeholder="Qtd realizada">
                 <button class="btn-action" onclick="save('abdominais')">Gravar</button>
             </div>
-            <table id="tableAbdominais">
-                <thead><tr><th>Data</th><th>Resultado</th></tr></thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-container">
+                <table id="tableAbdominais">
+                    <thead><tr><th>Data</th><th>Qtd</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <div id="barras" class="page">
         <div class="card">
-            <h3>📅 Plano da Semana: Barras</h3>
-            <div class="prog-diaria">Seg: 20 Negativas | Ter: 20 Negativas | Qua: Descanso | Qui: 25 Negativas | Sex: Tentativa Max | Sáb: Suspensão</div>
+            <h3>📅 Plano: Barras</h3>
             <div class="input-group">
-                <input type="number" id="valBarras" placeholder="Qtd ou Segundos">
+                <input type="number" id="valBarras" placeholder="Repetições">
                 <button class="btn-action" onclick="save('barras')">Gravar</button>
             </div>
-            <table id="tableBarras">
-                <thead><tr><th>Data</th><th>Resultado</th></tr></thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-container">
+                <table id="tableBarras">
+                    <thead><tr><th>Data</th><th>Reps</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <div id="corrida" class="page">
         <div class="card">
-            <h3>📅 Plano da Semana: Corrida</h3>
-            <div class="prog-diaria">Seg: 20min Lento | Ter: 10x100m | Qua: Descanso | Qui: 30min Lento | Sex: Cooper Test | Sáb: 20min Lento</div>
+            <h3>🏃 Registo de Corrida</h3>
             <div class="input-group">
-                <input type="number" id="valCorrida" placeholder="Metros">
-                <button class="btn-action" onclick="save('corrida')">Gravar</button>
+                <input type="number" id="corridaMetros" placeholder="Distância (Metros)">
+                <input type="text" id="corridaTempo" placeholder="Tempo (ex: 20:00)">
+                <input type="number" id="corridaBPM" placeholder="BPM Máximo (Relógio)">
+                <button class="btn-action" onclick="saveCorrida()">Gravar Treino</button>
             </div>
-            <table id="tableCorrida">
-                <thead><tr><th>Data</th><th>Metros</th></tr></thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="gerador" class="page">
-        <div class="card ai-box">
-            <h3>Análise Inteligente GNR</h3>
-            <div id="aiOutput">Aguarda pelo final da semana para gerar novos dados...</div>
-            <button class="btn-action" style="width:100%; margin-top:15px;" onclick="generateAI()">GERAR PRÓXIMA SEMANA</button>
+            <div class="table-container">
+                <table id="tableCorrida">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Metros</th>
+                            <th>Tempo</th>
+                            <th>BPM</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
@@ -193,10 +186,7 @@
         "Para que outros possam viver! 🇵🇹",
         "A disciplina é a tua melhor arma.",
         "O suor no treino poupa o sangue na batalha.",
-        "A asma não te trava, o medo sim. Continua!",
-        "Um dia serás tu a envergar a farda. Não desistas!",
-        "Foco na meta, a GNR espera por ti!",
-        "Mais uma repetição, menos um obstáculo."
+        "Foco na meta, a GNR espera por ti!"
     ];
 
     let chart;
@@ -205,10 +195,34 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
+        if(event) event.currentTarget.classList.add('active');
         if(id === 'home') initChart();
     }
 
+    // Função para Corrida (com os novos slots)
+    function saveCorrida() {
+        const m = document.getElementById('corridaMetros').value;
+        const t = document.getElementById('corridaTempo').value;
+        const bpm = document.getElementById('corridaBPM').value;
+
+        if(!m || !t) return alert("Preenche metros e tempo!");
+
+        const entry = { 
+            date: new Date().toLocaleDateString('pt-PT'), 
+            metros: m, 
+            tempo: t, 
+            bpm: bpm || "--" 
+        };
+
+        let logs = JSON.parse(localStorage.getItem('gnr_corrida_v2') || "[]");
+        logs.push(entry);
+        localStorage.setItem('gnr_corrida_v2', JSON.stringify(logs));
+
+        document.getElementById('motivationDisplay').innerText = "🔥 " + frases[Math.floor(Math.random() * frases.length)];
+        renderTables();
+    }
+
+    // Função para Abs e Barras
     function save(tipo) {
         const val = document.getElementById('val' + tipo.charAt(0).toUpperCase() + tipo.slice(1)).value;
         if(!val) return;
@@ -218,72 +232,49 @@
         logs.push(entry);
         localStorage.setItem('gnr_' + tipo, JSON.stringify(logs));
 
-        // Feedback visual e sonoro (simulado)
-        document.getElementById('motivationDisplay').innerText = "🔥 " + frases[Math.floor(Math.random() * frases.length)];
-        
+        document.getElementById('motivationDisplay').innerText = "💪 " + frases[Math.floor(Math.random() * frases.length)];
         renderTables();
-        updateHome();
     }
 
     function renderTables() {
-        ['abdominais', 'barras', 'corrida'].forEach(tipo => {
+        // Render Corrida
+        const logsCorrida = JSON.parse(localStorage.getItem('gnr_corrida_v2') || "[]");
+        document.querySelector(`#tableCorrida tbody`).innerHTML = logsCorrida.map(l => 
+            `<tr><td>${l.date}</td><td>${l.metros}m</td><td>${l.tempo}</td><td>${l.bpm}</td></tr>`
+        ).reverse().join('');
+
+        // Render Outros
+        ['abdominais', 'barras'].forEach(tipo => {
             const logs = JSON.parse(localStorage.getItem('gnr_' + tipo) || "[]");
             const tbody = document.querySelector(`#table${tipo.charAt(0).toUpperCase() + tipo.slice(1)} tbody`);
             tbody.innerHTML = logs.map(l => `<tr><td>${l.date}</td><td>${l.value}</td></tr>`).reverse().join('');
         });
     }
 
-    function updateHome() {
-        const logsCorrida = JSON.parse(localStorage.getItem('gnr_corrida') || "[]");
-        const total = (JSON.parse(localStorage.getItem('gnr_abdominais') || "[]").length > 0 ? 1 : 0) +
-                      (JSON.parse(localStorage.getItem('gnr_barras') || "[]").length > 0 ? 1 : 0) +
-                      (logsCorrida.length > 0 ? 1 : 0);
-        
-        let perc = Math.round((total / 3) * 100);
-        document.getElementById('percentText').innerText = `${perc}% da Base Semanal Ativa`;
-        initChart();
-    }
-
     function initChart() {
         const ctx = document.getElementById('resilienceChart').getContext('2d');
-        const logs = JSON.parse(localStorage.getItem('gnr_corrida') || "[]");
-        
+        const logs = JSON.parse(localStorage.getItem('gnr_corrida_v2') || "[]");
         if(chart) chart.destroy();
-
         chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: logs.map(l => l.date),
                 datasets: [{
-                    label: 'Resistência (Metros)',
-                    data: logs.map(l => l.value),
+                    label: 'Metros',
+                    data: logs.map(l => l.metros),
                     borderColor: '#52b788',
-                    tension: 0.4,
+                    tension: 0.3,
                     fill: true,
                     backgroundColor: 'rgba(82, 183, 136, 0.1)'
                 }]
             },
-            options: { responsive: true, scales: { y: { beginAtZero: false } } }
+            options: { responsive: true, maintainAspectRatio: false }
         });
-    }
-
-    function generateAI() {
-        const logs = JSON.parse(localStorage.getItem('gnr_corrida') || "[]");
-        if(logs.length < 2) {
-            document.getElementById('aiOutput').innerText = "Precisas de pelo menos 2 registos de corrida para eu calcular a tua progressão.";
-            return;
-        }
-        const ultima = parseInt(logs[logs.length-1].value);
-        document.getElementById('aiOutput').innerHTML = `
-            <h4 style="color:var(--neon-green)">RELATÓRIO DE INSTRUÇÃO:</h4>
-            <p>Evolução detetada. Próxima semana: Meta de <strong>${ultima + 50} metros</strong>.</p>
-            <p>Foco: Aumentar intensidade nas barras em 5%.</p>
-        `;
     }
 
     window.onload = () => {
         renderTables();
-        updateHome();
+        initChart();
     };
 </script>
 </body>
