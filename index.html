@@ -3,330 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-    <title>TREINO DO JOÃO | OPS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <title>TREINO DO JOÃO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg: #020617;
-            --panel: rgba(30, 41, 59, 0.7);
-            --neon: #00ff88;
-            --neon-glow: rgba(0, 255, 136, 0.3);
-            --accent: #38bdf8;
-            --border: rgba(255, 255, 255, 0.1);
-        }
+        :root { --bg: #020617; --panel: #0f172a; --neon: #00ff88; --accent: #38bdf8; --border: rgba(0, 255, 136, 0.3); --danger: #ff4757; }
+        
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #f8fafc; margin: 0; padding-bottom: 20px; }
+        
+        header { padding: 20px; text-align: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.5); }
+        h1 { font-family: 'Orbitron', sans-serif; font-size: 1.1rem; color: var(--neon); margin: 0; letter-spacing: 2px; }
+        .motto { font-size: 0.65rem; color: var(--accent); margin-top: 5px; text-transform: uppercase; font-weight: 700; }
 
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background-color: var(--bg);
-            background-image: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
-            color: #f8fafc;
-            margin: 0;
-            padding-bottom: 60px;
-        }
+        nav { display: flex; justify-content: space-around; background: var(--panel); padding: 15px 5px; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); }
+        .tab-btn { background: none; border: none; color: #64748b; font-family: 'Orbitron', sans-serif; font-size: 0.6rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .tab-btn.active { color: var(--neon); border-bottom: 2px solid var(--neon); }
 
-        /* HEADER ESTATUÁRIO */
-        header {
-            padding: 30px 0;
-            text-align: center;
-            border-bottom: 2px solid var(--neon);
-            background: rgba(0, 0, 0, 0.4);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 1.4rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--neon);
-            margin: 0;
-            text-shadow: 0 0 15px var(--neon-glow);
-        }
-
-        .motto {
-            font-size: 0.8rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            font-weight: 700;
-            margin-top: 10px;
-            letter-spacing: 1px;
-        }
-
-        /* NAVBAR FUTURISTA */
-        nav {
-            display: flex;
-            justify-content: space-around;
-            width: 92%;
-            margin: -20px auto 20px;
-            background: rgba(15, 23, 42, 0.95);
-            padding: 15px 5px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(15px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: #64748b;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem;
-            font-weight: 700;
-            transition: 0.3s;
-        }
-
-        .tab-btn.active {
-            color: var(--neon);
-            transform: scale(1.1);
-        }
-
-        .container { width: 92%; max-width: 450px; margin: auto; }
+        .container { width: 92%; max-width: 450px; margin: 15px auto; }
         .page { display: none; }
-        .page.active { display: block; animation: powerOn 0.5s ease-out; }
+        .page.active { display: block !important; }
 
-        @keyframes powerOn {
-            0% { opacity: 0; filter: brightness(2); }
-            100% { opacity: 1; filter: brightness(1); }
-        }
+        .card { background: var(--panel); border: 1px solid var(--border); padding: 18px; border-radius: 4px; margin-bottom: 15px; }
+        h3 { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--accent); margin: 0 0 15px 0; text-transform: uppercase; border-left: 3px solid var(--neon); padding-left: 10px; }
 
-        /* CARDS ESTILO "INTERFACE" */
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-left: 4px solid var(--neon);
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+        .ring-container { display: flex; justify-content: center; align-items: center; position: relative; height: 160px; }
+        .ring-info { position: absolute; text-align: center; }
+        .ring-info b { font-family: 'Orbitron'; font-size: 2rem; color: var(--neon); }
 
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0; right: 0;
-            width: 50px; height: 50px;
-            background: linear-gradient(45deg, transparent 45%, var(--border) 50%, transparent 55%);
-        }
+        .input-group { display: flex; flex-direction: column; gap: 12px; }
+        input, select, textarea { background: #020617; border: 1px solid #334155; padding: 14px; border-radius: 4px; color: white; font-family: inherit; font-size: 1rem; }
+        
+        .btn-action { background: var(--neon); color: black; font-family: 'Orbitron'; font-weight: 800; padding: 16px; border: none; border-radius: 4px; margin-top: 5px; text-transform: uppercase; }
+        .btn-danger { background: none; color: var(--danger); border: 1px solid var(--danger); font-family: 'Orbitron'; font-size: 0.5rem; padding: 8px; border-radius: 4px; margin-top: 15px; width: 100%; cursor: pointer; }
 
-        h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .tech-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+        .tech-table th { color: var(--accent); text-align: left; padding: 10px; border-bottom: 2px solid var(--border); background: rgba(0,0,0,0.2); }
+        .tech-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* GRÁFICO E ANEL */
-        .chart-box {
-            background: rgba(0,0,0,0.3);
-            border-radius: 4px;
-            padding: 10px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .ring-wrapper {
-            position: relative;
-            height: 180px;
-            width: 180px;
-            margin: auto;
-        }
-
-        .ring-data {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-
-        .ring-data b { font-family: 'Orbitron'; font-size: 2.2rem; color: var(--neon); }
-
-        /* TABELAS MODERNAS */
-        .modern-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .modern-table th {
-            font-size: 0.65rem;
-            color: var(--accent);
-            text-transform: uppercase;
-            padding: 10px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .modern-table td {
-            padding: 15px 10px;
-            font-size: 0.85rem;
-            background: rgba(255,255,255,0.02);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        /* INPUTS TECH */
-        .input-group input, .input-group select, .input-group textarea {
-            background: #0f172a;
-            border: 1px solid var(--border);
-            color: white;
-            padding: 15px;
-            border-radius: 4px;
-            font-family: 'Rajdhani';
-            font-weight: 500;
-            font-size: 1rem;
-        }
-
-        .btn-action {
-            background: var(--neon);
-            color: black;
-            font-family: 'Orbitron';
-            font-weight: 900;
-            padding: 18px;
-            border: none;
-            border-radius: 4px;
-            text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(0,255,136,0.2);
-            margin-top: 10px;
-        }
-
-        .shoe-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .shoe-stat-card {
-            background: #0f172a;
-            padding: 15px;
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        .shoe-stat-card span { font-size: 0.7rem; color: #64748b; display: block; }
-        .shoe-stat-card b { font-size: 1.4rem; color: var(--accent); }
+        .shoe-box { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .shoe-card { background: rgba(0,0,0,0.3); padding: 15px; text-align: center; border: 1px solid var(--border); border-top: 3px solid var(--accent); }
     </style>
 </head>
 <body>
 
 <header>
     <h1>TREINO DO JOÃO</h1>
-    <div class="motto">“Tudo passa, mas as conquistas são eternas”</div>
+    <div class="motto">“As feridas passam, tudo passa, mas as conquistas são eternas”</div>
 </header>
 
 <nav>
-    <button class="tab-btn active" onclick="showPage('home')">Status</button>
-    <button class="tab-btn" onclick="showPage('corrida')">Run</button>
-    <button class="tab-btn" onclick="showPage('forca')">Power</button>
-    <button class="tab-btn" onclick="showPage('diario')">Log</button>
-    <button class="tab-btn" onclick="showPage('sup')">Sup</button>
-    <button class="tab-btn" onclick="showPage('ia')">IA</button>
+    <button class="tab-btn active" onclick="openTab(event, 'home')">Status</button>
+    <button class="tab-btn" onclick="openTab(event, 'corrida')">Run</button>
+    <button class="tab-btn" onclick="openTab(event, 'forca')">Power</button>
+    <button class="tab-btn" onclick="openTab(event, 'diario')">Log</button>
+    <button class="tab-btn" onclick="openTab(event, 'sup')">Sup</button>
+    <button class="tab-btn" onclick="openTab(event, 'ia')">IA</button>
 </nav>
 
 <div class="container">
     
     <div id="home" class="page active">
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Consistência Semanal [cite: 2026-01-09]</h3>
-            <div class="ring-wrapper">
+            <h3>// MISSÃO SEMANAL</h3>
+            <div class="ring-container">
                 <canvas id="ringChart"></canvas>
-                <div class="ring-data">
-                    <b id="ringText">0/4</b><br>
-                    <span style="font-size:0.6rem; letter-spacing:2px">Missões</span>
-                </div>
+                <div class="ring-info"><b id="ringText">0/4</b><br><small>OK</small></div>
             </div>
         </div>
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Correlação Performance [cite: 2026-01-09]</h3>
-            <div class="chart-box">
-                <canvas id="mainChart"></canvas>
-            </div>
+            <h3>// PERFORMANCE TÁTICA</h3>
+            <canvas id="mainChart"></canvas>
         </div>
     </div>
 
     <div id="corrida" class="page">
-        <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Inventário Sapatilhas [cite: 2026-01-09]</h3>
-            <div class="shoe-grid">
-                <div class="shoe-stat-card">
-                    <span>ADIDAS ADIZERO</span>
-                    <b id="kmAd">0.0</b> <small>km</small>
-                </div>
-                <div class="shoe-stat-card">
-                    <span>NIKE PEGASUS</span>
-                    <b id="kmNi">0.0</b> <small>km</small>
-                </div>
-            </div>
+        <div class="shoe-box">
+            <div class="shoe-card"><span>ADIDAS</span><br><b id="kAd">0.0</b><small>KM</small></div>
+            <div class="shoe-card"><span>NIKE</span><br><b id="kNi">0.0</b><small>KM</small></div>
         </div>
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Nova Missão</h3>
-            <div class="input-group" style="display:flex; flex-direction:column; gap:10px;">
-                <input type="number" id="rm" placeholder="Distância (m)">
-                <input type="text" id="rt" placeholder="Tempo (20:00)">
-                <select id="rs">
-                    <option value="Adidas">Adidas Adizero</option>
-                    <option value="Nike">Nike Pegasus</option>
-                </select>
-                <button class="btn-action" onclick="saveRun()">Registar Dados</button>
+            <h3>// REGISTAR CORRIDA</h3>
+            <div class="input-group">
+                <input type="number" id="rm" placeholder="Distância (Metros)">
+                <input type="text" id="rt" placeholder="Tempo (ex: 20:00)">
+                <select id="rs"><option value="Adidas">Adidas Adizero</option><option value="Nike">Nike Pegasus</option></select>
+                <button class="btn-action" onclick="saveRun()">GRAVAR</button>
             </div>
         </div>
     </div>
 
     <div id="forca" class="page">
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Módulos de Força [cite: 2026-01-09]</h3>
-            <div class="input-group" style="display:flex; flex-direction:column; gap:10px;">
+            <h3>// MÓDULOS DE FORÇA</h3>
+            <div class="input-group">
                 <select id="ft"><option value="Abdominais">Abdominais</option><option value="Barras">Barras</option></select>
                 <input type="number" id="fq" placeholder="Quantidade">
-                <input type="text" id="ftime" placeholder="Tempo (Opcional)">
-                <button class="btn-action" onclick="savePower()">Gravar Força</button>
+                <button class="btn-action" onclick="savePower()">GRAVAR</button>
             </div>
         </div>
     </div>
 
     <div id="diario" class="page">
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Estado Biométrico [cite: 2026-01-09]</h3>
-            <div class="input-group" style="display:flex; flex-direction:column; gap:10px;">
+            <h3>// ESTADO BIOMÉTRICO</h3>
+            <div class="input-group">
                 <input type="number" step="0.1" id="dp" placeholder="Peso (kg)">
-                <select id="dc">
-                    <option value="Fresquinho">Estado: Fresquinho ⚡</option>
-                    <option value="Normal">Estado: Normal 👍</option>
-                    <option value="Moído">Estado: Moído 🤕</option>
-                </select>
-                <textarea id="dn" placeholder="Observações de dor ou fadiga..."></textarea>
-                <button class="btn-action" onclick="saveDiary()">Submeter Diário</button>
+                <select id="dc"><option value="Fresquinho">Fresquinho ⚡</option><option value="Normal">Normal 👍</option><option value="Moído">Moído 🤕</option></select>
+                <textarea id="dn" placeholder="Notas..."></textarea>
+                <button class="btn-action" onclick="saveDiary()">SUBMETER</button>
             </div>
-            <table class="modern-table">
+            <table class="tech-table">
                 <thead><tr><th>Data</th><th>Peso</th><th>Estado</th></tr></thead>
                 <tbody id="diaryTable"></tbody>
             </table>
+            <button class="btn-danger" onclick="clearData('j_v16_d')">APAGAR HISTÓRICO DIÁRIO</button>
         </div>
     </div>
 
     <div id="sup" class="page">
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Suplementação Diária [cite: 2026-01-09]</h3>
-            <div class="input-group" style="display:flex; flex-direction:column; gap:10px;">
+            <h3>// SUPLEMENTAÇÃO</h3>
+            <div class="input-group">
                 <select id="st"><option value="Creatina">Creatina (5g)</option><option value="Multivitamínico">Multivitamínico (1 Un.)</option></select>
-                <button class="btn-action" onclick="saveSup()">Registar Toma</button>
+                <button class="btn-action" onclick="saveSup()">REGISTAR</button>
             </div>
-            <table class="modern-table">
+            <table class="tech-table">
                 <thead><tr><th>Data</th><th>Toma</th><th>Dose</th></tr></thead>
                 <tbody id="supTable"></tbody>
             </table>
+            <button class="btn-danger" onclick="clearData('j_v16_s')">APAGAR REGISTO SUPLEMENTOS</button>
         </div>
     </div>
 
     <div id="ia" class="page">
         <div class="card">
-            <h3><span style="color:var(--neon)">//</span> Analista Tático IA [cite: 2026-01-09]</h3>
-            <button class="btn-action" style="background:var(--accent);" onclick="generateIA()">Executar Diagnóstico</button>
-            <div id="iaResponse" style="display:none"></div>
+            <h3>// DIAGNÓSTICO IA</h3>
+            <button class="btn-action" style="background:var(--accent);" onclick="generateIA()">ANALISAR TREINOS</button>
+            <div id="iaRes" style="margin-top:15px; display:none; border:1px dashed var(--neon); padding:10px;"></div>
         </div>
     </div>
 
@@ -335,84 +148,89 @@
 <script>
     let mChart, rChart;
 
-    function showPage(id) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
-        if(id === 'home') initCharts();
-        if(id === 'corrida') renderShoes();
+    function openTab(evt, tabId) {
+        let pages = document.getElementsByClassName("page");
+        for (let i = 0; i < pages.length; i++) { pages[i].style.display = "none"; }
+        let btns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
+        document.getElementById(tabId).style.display = "block";
+        evt.currentTarget.classList.add("active");
+        if(tabId === 'home') initCharts();
+    }
+
+    function clearData(key) {
+        if(confirm("Tens a certeza que queres apagar estes dados?")) {
+            localStorage.removeItem(key);
+            location.reload();
+        }
     }
 
     function saveRun() {
         const m = document.getElementById('rm').value, t = document.getElementById('rt').value, s = document.getElementById('rs').value;
         if(!m || !t) return;
-        const pts = t.split(':'), sec = parseInt(pts[0])*60 + parseInt(pts[1]);
-        let logs = JSON.parse(localStorage.getItem('j_v13_r') || "[]");
+        const pts = t.split(':'), sec = parseInt(pts[0])*60 + (parseInt(pts[1]) || 0);
+        let logs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
         logs.push({ d: new Date().toLocaleDateString('pt-PT'), m: parseFloat(m), t, s, dec: sec/60 });
-        localStorage.setItem('j_v13_r', JSON.stringify(logs));
-        renderShoes();
-        showPage('home');
+        localStorage.setItem('j_v16_r', JSON.stringify(logs));
+        location.reload();
     }
 
     function renderShoes() {
-        const logs = JSON.parse(localStorage.getItem('j_v13_r') || "[]");
+        const logs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
         let ad = 0, ni = 0;
         logs.forEach(l => { if(l.s === 'Adidas') ad += l.m; else ni += l.m; });
-        document.getElementById('kmAd').innerText = (ad/1000).toFixed(1);
-        document.getElementById('kmNi').innerText = (ni/1000).toFixed(1);
+        document.getElementById('kAd').innerText = (ad/1000).toFixed(1);
+        document.getElementById('kNi').innerText = (ni/1000).toFixed(1);
     }
 
     function savePower() {
-        const t = document.getElementById('ft').value, q = document.getElementById('fq').value, tm = document.getElementById('ftime').value;
+        const t = document.getElementById('ft').value, q = document.getElementById('fq').value;
         if(!q) return;
-        let logs = JSON.parse(localStorage.getItem('j_v13_f') || "[]");
-        logs.push({ d: new Date().toLocaleDateString('pt-PT'), t, q, tm: tm || "--" });
-        localStorage.setItem('j_v13_f', JSON.stringify(logs));
-        showPage('home');
+        let logs = JSON.parse(localStorage.getItem('j_v16_f') || "[]");
+        logs.push({ d: new Date().toLocaleDateString('pt-PT'), t, q });
+        localStorage.setItem('j_v16_f', JSON.stringify(logs));
+        alert("Força gravada!");
     }
 
     function saveSup() {
         const t = document.getElementById('st').value;
-        const dose = t.includes("Creatina") ? "5g" : "1 Un.";
-        let logs = JSON.parse(localStorage.getItem('j_v13_s') || "[]");
-        logs.push({ d: new Date().toLocaleDateString('pt-PT'), t, dose });
-        localStorage.setItem('j_v13_s', JSON.stringify(logs));
+        let logs = JSON.parse(localStorage.getItem('j_v16_s') || "[]");
+        logs.push({ d: new Date().toLocaleDateString('pt-PT'), t, dose: t.includes("Creatina") ? "5g" : "1 Un." });
+        localStorage.setItem('j_v16_s', JSON.stringify(logs));
         renderSup();
     }
 
     function renderSup() {
-        const logs = JSON.parse(localStorage.getItem('j_v13_s') || "[]");
-        document.getElementById('supTable').innerHTML = logs.reverse().slice(0,5).map(l => `<tr><td>${l.d}</td><td>${l.t}</td><td>${l.dose}</td></tr>`).join('');
+        const logs = JSON.parse(localStorage.getItem('j_v16_s') || "[]");
+        document.getElementById('supTable').innerHTML = logs.reverse().slice(0,3).map(l => `<tr><td>${l.d}</td><td>${l.t}</td><td>${l.dose}</td></tr>`).join('');
     }
 
     function saveDiary() {
         const p = document.getElementById('dp').value, c = document.getElementById('dc').value, n = document.getElementById('dn').value;
         if(!p) return;
-        let logs = JSON.parse(localStorage.getItem('j_v13_d') || "[]");
+        let logs = JSON.parse(localStorage.getItem('j_v16_d') || "[]");
         logs.push({ d: new Date().toLocaleDateString('pt-PT'), p, c, n });
-        localStorage.setItem('j_v13_d', JSON.stringify(logs));
+        localStorage.setItem('j_v16_d', JSON.stringify(logs));
         renderDiary();
     }
 
     function renderDiary() {
-        const logs = JSON.parse(localStorage.getItem('j_v13_d') || "[]");
+        const logs = JSON.parse(localStorage.getItem('j_v16_d') || "[]");
         document.getElementById('diaryTable').innerHTML = logs.reverse().slice(0,3).map(l => `<tr><td>${l.d}</td><td>${l.p}kg</td><td>${l.c}</td></tr>`).join('');
     }
 
     function generateIA() {
-        const runs = JSON.parse(localStorage.getItem('j_v13_r') || "[]");
-        const power = JSON.parse(localStorage.getItem('j_v13_f') || "[]");
-        const resp = document.getElementById('iaResponse');
-        resp.style.display = 'block';
+        const runs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
+        const power = JSON.parse(localStorage.getItem('j_v16_f') || "[]");
+        const res = document.getElementById('iaRes');
+        res.style.display = "block";
         const total = (runs.length + power.length) % 5;
-        let txt = total < 3 ? `<b style="color:#ff4757">ALERTA DE CONSISTÊNCIA:</b> Apenas ${total}/4 treinos concluídos. O objetivo de baixar dos 5:50 requer maior volume tático.` : "<b style="color:var(--neon)">STATUS:</b> Consistência ideal mantida.";
-        resp.innerHTML = txt;
+        res.innerHTML = total < 3 ? `<b style="color:var(--danger)">ALERTA:</b> ${total}/4 treinos. Precisas de mais volume para os 10km.` : "<b>STATUS:</b> Consistência ideal.";
     }
 
     function initCharts() {
-        const runs = JSON.parse(localStorage.getItem('j_v13_r') || "[]");
-        const power = JSON.parse(localStorage.getItem('j_v13_f') || "[]");
+        const runs = JSON.parse(localStorage.getItem('j_v16_r') || "[]");
+        const power = JSON.parse(localStorage.getItem('j_v16_f') || "[]");
         const total = (runs.length + power.length) % 5;
         document.getElementById('ringText').innerText = `${total}/4`;
         
@@ -424,18 +242,12 @@
         if(mChart) mChart.destroy();
         mChart = new Chart(ctxM, {
             type: 'scatter',
-            data: { datasets: [{ label: 'Treino', data: runs.map(l => ({ x: l.m, y: l.dec })), backgroundColor: '#00ff88', pointRadius: 8 }] },
-            options: {
-                scales: {
-                    x: { min: 0, max: 10000, ticks: { stepSize: 1000, color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-                    y: { min: 0, max: 60, ticks: { stepSize: 4, color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } }
-                },
-                plugins: { legend: { display: false } }
-            }
+            data: { datasets: [{ label: 'Performance', data: runs.map(l => ({ x: l.m, y: l.dec })), backgroundColor: '#00ff88' }] },
+            options: { scales: { x: { min: 0, max: 10000, title:{display:true, text:'Metros'} }, y: { min: 0, max: 60, title:{display:true, text:'Minutos'} } }, plugins: { legend: { display: false } } }
         });
     }
 
-    window.onload = () => { renderShoes(); renderSup(); renderDiary(); initCharts(); };
+    window.onload = () => { renderSup(); renderDiary(); renderShoes(); initCharts(); };
 </script>
 </body>
 </html>
