@@ -6,12 +6,12 @@
     <title>Agenda iOS Style</title>
     <style>
         :root {
-            --bg-color: #F9F8F4; 
-            --text-color: #000000;
+            --bg-color: #E6F2FF; /* Fundo azul clarinho */
+            --text-color: #000000; /* Letras pretas */
             --primary-color: #FF3B30; 
-            --nav-bg: #F4F3EF;
-            --border-color: #E5E5EA;
-            --gray-text: #8E8E93;
+            --nav-bg: #E6F2FF; /* Acompanha o azul clarinho */
+            --border-color: #Cce0F5; /* Borda ajustada para combinar com o azul */
+            --gray-text: #333333; /* Cinza bem escuro para ler bem */
         }
 
         * {
@@ -24,15 +24,14 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding-top: 110px; /* Aumentado para descolar bem do topo do telemóvel */
+            padding-top: 80px; /* Reduzido: cabeçalho mais curto */
             overflow-x: hidden;
         }
 
-        /* Cabeçalho Fixo (Descolado do Topo do Ecrã) */
+        /* Cabeçalho Fixo mais curto */
         header {
             background-color: var(--bg-color);
-            /* O padding-top de 40px afasta os botões da barra de notificações do telemóvel */
-            padding: 40px 15px 10px; 
+            padding: 15px 15px 10px; /* Reduzido o espaço extra que estava no topo */
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -46,8 +45,8 @@
         #clock {
             text-align: center;
             font-size: 0.85rem;
-            color: var(--gray-text);
-            margin-bottom: 12px;
+            color: var(--text-color); /* Passou a preto */
+            margin-bottom: 8px; /* Margem reduzida */
             font-weight: 500;
         }
 
@@ -91,10 +90,10 @@
         /* Menu de Navegação Hambúrguer */
         nav {
             position: fixed;
-            top: 110px; /* Alinhado com a nova altura do cabeçalho */
+            top: 80px; /* Ajustado à nova altura do cabeçalho */
             left: -100%;
             width: 70%;
-            height: calc(100% - 110px);
+            height: calc(100% - 80px);
             background-color: var(--nav-bg);
             border-right: 1px solid var(--border-color);
             transition: left 0.3s ease;
@@ -106,8 +105,8 @@
         nav.open { left: 0; }
         nav ul { list-style: none; }
         nav li { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        nav a { text-decoration: none; color: var(--text-color); font-size: 1.2rem; display: block; }
-        nav a.active { color: var(--primary-color); font-weight: bold; }
+        nav a { text-decoration: none; color: var(--text-color); font-size: 1.2rem; display: block; font-weight: bold; }
+        nav a.active { color: var(--primary-color); }
 
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -118,7 +117,7 @@
         .tab-content { display: none; padding: 15px; }
         .tab-content.active { display: block; }
 
-        /* Calendário Mensal (Dias Aumentados com Texto) */
+        /* Calendário Mensal */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -136,22 +135,24 @@
 
         .weekday {
             font-size: 0.75rem;
-            color: var(--gray-text);
+            color: var(--text-color); /* Letras pretas */
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: bold; /* Negrito nos dias da semana */
         }
 
         .day {
-            min-height: 100px; /* Quadrados maiores */
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding-top: 5px;
             font-size: 1.2rem; 
             cursor: pointer;
-            border-bottom: 1px solid #f0efeb;
-            border-right: 1px solid #f0efeb; /* Linha muito subtil a dividir os dias */
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color); 
             overflow: hidden;
+            font-weight: bold; /* Dias a negrito como pedido */
+            color: var(--text-color);
         }
         .day:nth-child(7n) { border-right: none; }
 
@@ -168,10 +169,8 @@
         .day.today .day-number {
             background-color: var(--primary-color);
             color: white;
-            font-weight: bold;
         }
 
-        /* Novo design para os textos das tarefas na grelha mensal */
         .events-container {
             width: 95%;
             display: flex;
@@ -188,8 +187,9 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            background-color: rgba(0,0,0,0.03); /* Fundo muito transparente para o texto sobressair */
+            background-color: rgba(0,0,0,0.03); 
             border-radius: 2px;
+            font-weight: normal; /* Para o texto da tarefa não ficar todo a negrito e confundir com o número */
         }
 
         /* Vista Anual */
@@ -204,7 +204,7 @@
             font-size: 0.9rem;
             margin-bottom: 5px;
         }
-        .mini-calendar { font-size: 0.55rem; text-align: center; }
+        .mini-calendar { font-size: 0.55rem; text-align: center; font-weight: bold; }
         .mini-calendar .weekday { font-size: 0.5rem; margin-bottom: 2px;}
         .mini-day { padding: 2px 0; }
 
@@ -225,25 +225,25 @@
 
         /* Eventos na Vista Diária */
         .event-item {
-            background-color: #fff;
+            background-color: #ffffff;
             padding: 15px; border-radius: 10px; margin-bottom: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             display: flex; justify-content: space-between; align-items: center;
             border-left: 5px solid;
         }
         .event-info { flex-grow: 1; }
-        .event-title { font-weight: bold; font-size: 1.1rem; }
+        .event-title { font-weight: bold; font-size: 1.1rem; color: var(--text-color); }
         .btn-delete {
             background: none; border: none; color: var(--primary-color);
             font-size: 1.2rem; cursor: pointer; padding: 10px;
         }
 
         /* Formulários e Modal */
-        label { display: block; margin-bottom: 5px; color: var(--gray-text); font-size: 0.9rem;}
+        label { display: block; margin-bottom: 5px; color: var(--text-color); font-size: 0.9rem; font-weight: bold;}
         input[type="text"], input[type="date"], textarea {
             width: 100%; padding: 12px; margin-bottom: 15px;
             border: 1px solid var(--border-color); border-radius: 8px;
-            background-color: #fff; font-size: 1rem;
+            background-color: #fff; font-size: 1rem; color: var(--text-color);
         }
         input[type="color"] { width: 100%; height: 50px; border: none; margin-bottom: 15px; background: none;}
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
@@ -264,7 +264,7 @@
         .template-btn {
             width: 100%; text-align: left; padding: 15px; margin-bottom: 10px;
             background: #fff; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;
-            border-left: 5px solid; cursor: pointer;
+            border-left: 5px solid; cursor: pointer; color: var(--text-color);
         }
     </style>
 </head>
@@ -348,12 +348,11 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 style="margin-bottom: 15px; color: var(--primary-color);">Eventos</h3>
             <div id="templatesList"></div>
-            <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: var(--gray-text);">Cancelar</button>
+            <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: var(--text-color); font-weight: bold;">Cancelar</button>
         </div>
     </div>
 
     <script>
-        // --- 1. Relógio do Topo ---
         function updateClock() {
             const now = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -366,7 +365,6 @@
         setInterval(updateClock, 1000);
         updateClock(); 
 
-        // Navegação e Variáveis Globais
         let currentDate = new Date();
         let currentDailyDateStr = "";
 
@@ -399,7 +397,6 @@
 
         const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-        // Renderizar Calendário Mensal
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -429,17 +426,15 @@
                     numDiv = `<div class="day-number" style="background-color: var(--primary-color); color: white;">${i}</div>`;
                 }
 
-                // --- NOVO: Textos em vez de pontos ---
                 let eventsHTML = '';
                 let dayEvents = allEvents[dateStr] || [];
                 if (dayEvents.length > 0) {
                     eventsHTML = '<div class="events-container">';
-                    // Mostra o texto das primeiras 4 tarefas para caber bem
                     dayEvents.slice(0, 4).forEach(ev => {
                         eventsHTML += `<div class="event-text" style="border-left-color: ${ev.color};">${ev.type}</div>`;
                     });
                     if (dayEvents.length > 4) {
-                        eventsHTML += `<div style="font-size: 0.5rem; color: var(--gray-text); text-align: left; padding-left: 3px;">+${dayEvents.length - 4} mais</div>`;
+                        eventsHTML += `<div style="font-size: 0.5rem; color: var(--text-color); text-align: left; padding-left: 3px;">+${dayEvents.length - 4} mais</div>`;
                     }
                     eventsHTML += '</div>';
                 }
@@ -450,7 +445,6 @@
             }
         }
 
-        // Renderizar Calendário Anual
         function renderYearly() {
             const year = currentDate.getFullYear();
             document.getElementById('yearlyTitle').innerText = year;
@@ -476,7 +470,6 @@
 
         renderCalendar(); 
 
-        // Lógica Inserir
         const typeInput = document.getElementById('eventType');
         const notesInput = document.getElementById('eventNotes');
 
@@ -516,7 +509,6 @@
             switchTab('home');
         });
 
-        // Vista Diária & Eliminar
         function openDailyView(dateStr, day, monthName, year) {
             currentDailyDateStr = dateStr;
             const dateObj = new Date(dateStr);
@@ -538,7 +530,7 @@
             let dayEvents = allEvents[currentDailyDateStr] || [];
 
             if (dayEvents.length === 0) {
-                dailyEventsList.innerHTML = '<p style="color: var(--gray-text); text-align: center; margin-top: 50px;">Nenhum Evento</p>';
+                dailyEventsList.innerHTML = '<p style="color: var(--text-color); text-align: center; margin-top: 50px;">Nenhum Evento</p>';
             } else {
                 dayEvents.forEach((ev, index) => {
                     let eventHTML = `
@@ -546,8 +538,8 @@
                             <div class="event-info">
                                 <div class="event-title">${ev.type}</div>
                     `;
-                    if (ev.value) eventHTML += `<div style="color: var(--gray-text); font-size: 0.9rem;">${ev.value}</div>`;
-                    if (ev.notes) eventHTML += `<div style="color: var(--gray-text); font-style: italic; font-size: 0.9rem;">"${ev.notes}"</div>`;
+                    if (ev.value) eventHTML += `<div style="color: var(--text-color); font-size: 0.9rem;">${ev.value}</div>`;
+                    if (ev.notes) eventHTML += `<div style="color: var(--text-color); font-style: italic; font-size: 0.9rem;">"${ev.notes}"</div>`;
                     
                     eventHTML += `</div>
                             <button class="btn-delete" onclick="deleteEvent('${currentDailyDateStr}', ${index})">🗑️</button>
@@ -569,14 +561,13 @@
             }
         }
 
-        // Lógica do Modal de Eventos (Botão +)
         function openTemplatesModal() {
             const templatesList = document.getElementById('templatesList');
             let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
             
             templatesList.innerHTML = '';
             if(templates.length === 0) {
-                templatesList.innerHTML = '<p style="color: var(--gray-text); text-align:center;">Ainda não guardaste nenhum evento.</p>';
+                templatesList.innerHTML = '<p style="color: var(--text-color); text-align:center;">Ainda não guardaste nenhum evento.</p>';
             } else {
                 templates.forEach(t => {
                     const btn = document.createElement('button');
