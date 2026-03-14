@@ -1,122 +1,224 @@
-<!DOCTYPE html>
+           <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Minha Agenda</title>
+    <title>A Minha Agenda Premium</title>
     <style>
-        /* Variáveis de Cores (Minimalista e Bonito) */
+        /* Variáveis de Cores (Estilo Dark Modo com tons Pastéis/Creme) */
         :root {
-            --bg-color: #fcfcfc;
-            --text-color: #333;
-            --primary-color: #4A90E2; /* Azul suave */
-            --today-color: #E24A68; /* Destaque para o dia atual */
-            --nav-bg: #ffffff;
-            --border-color: #e0e0e0;
+            --bg-color: #1a1a1d; /* Fundo escuro como na imagem */
+            --text-color: #fdfcf7; /* Texto claro, tom de creme suave */
+            --primary-color: #4A90E2; /* Azul para destaques */
+            --nav-bg: #212124; /* Fundo do cabeçalho e menu */
+            --border-color: #3a3a3d; /* Cor das bordas finas */
+            
+            /* Cores padrão para o seletor livre (caso queiras cores padrão depois) */
+            --color-1: #f9e8a5; /* Amarelo Pastel */
+            --color-2: #a3cff8; /* Azul Pastel */
+            --color-3: #b0edcd; /* Verde Pastel */
+            --color-4: #f8bed2; /* Rosa Pastel */
+            --color-5: #cab8ed; /* Roxo Pastel */
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding-bottom: 70px; /* Espaço para a navegação inferior */
+            padding-top: 60px; /* Espaço para o cabeçalho fixo */
+            overflow-x: hidden;
         }
 
-        /* Cabeçalho com Relógio */
+        /* Cabeçalho Fixo */
         header {
             background-color: var(--nav-bg);
-            padding: 15px;
-            text-align: center;
-            position: sticky;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
             border-bottom: 1px solid var(--border-color);
-            z-index: 100;
+            z-index: 1000;
+        }
+
+        #monthYearDisplay {
+            font-size: 1.1rem;
+            font-weight: bold;
         }
 
         #clock {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Ícone de Menu Hambúrguer (3 traços) */
+        .hamburger-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Menu de Navegação Hambúrguer */
+        nav {
+            position: fixed;
+            top: 60px; /* Logo abaixo do cabeçalho */
+            left: -100%; /* Oculto à esquerda */
+            width: 70%;
+            height: calc(100% - 60px);
+            background-color: var(--nav-bg);
+            border-right: 1px solid var(--border-color);
+            transition: left 0.3s ease;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        nav.open {
+            left: 0;
+        }
+
+        nav ul {
+            list-style: none;
+        }
+
+        nav li {
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
             font-size: 1.2rem;
             font-weight: bold;
+            display: block;
+            padding: 10px 0;
+        }
+
+        nav a.active {
             color: var(--primary-color);
+        }
+
+        /* Sobreposição de Menu */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 998;
+        }
+
+        .menu-overlay.open {
+            display: block;
         }
 
         /* Separadores (Páginas) */
         .tab-content {
             display: none;
-            padding: 20px;
+            padding: 15px;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        /* Calendário Mensal */
-        .month-header {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
+        /* Calendário Mensal Compacto */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
             text-align: center;
+            border-collapse: collapse;
         }
 
         .weekday {
-            font-size: 0.8rem;
+            font-size: 0.7rem;
             color: #888;
-            margin-bottom: 10px;
+            padding: 5px 0;
+            text-transform: uppercase;
         }
 
         .day {
-            padding: 15px 0;
-            font-weight: bold; /* Dias a negrito como pedido */
+            padding: 8px 0; /* Menor preenchimento para caber */
+            font-weight: bold;
+            font-size: 0.9rem;
             cursor: pointer;
-            border-radius: 50%;
             aspect-ratio: 1 / 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s;
-        }
-
-        .day:active {
-            background-color: #f0f0f0;
+            border-bottom: 1px solid #28282b;
+            position: relative;
         }
 
         /* Bola que preenche o dia de hoje */
         .day.today {
-            background-color: var(--today-color);
+            background-color: #E24A68;
+            border-radius: 50%;
             color: white;
+            z-index: 1;
+        }
+
+        /* Contentor para os pontos coloridos de eventos */
+        .event-markers-container {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-top: 3px;
+            width: 80%;
+            height: 4px;
+        }
+
+        .event-marker {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
         }
 
         /* Formulários (Separador Inserir) */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-weight: bold;
             font-size: 0.9rem;
+            color: #aaa;
         }
 
-        input[type="text"], input[type="date"], select, textarea {
+        input[type="text"], input[type="date"], textarea {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 1rem;
-            background-color: #fff;
+            background-color: #2a2a2d;
+            color: var(--text-color);
+        }
+
+        /* Novo Seletor de Cor Livre */
+        input[type="color"] {
+            border: none;
+            border-radius: 6px;
+            width: 100%;
+            height: 40px;
+            cursor: pointer;
+            background: none;
         }
 
         textarea {
@@ -127,12 +229,12 @@
 
         button.btn-submit {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            border-radius: 6px;
+            font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
         }
@@ -141,7 +243,9 @@
         .daily-header {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .btn-back {
@@ -150,67 +254,72 @@
             font-size: 1rem;
             color: var(--primary-color);
             margin-right: 15px;
-            padding: 10px;
+            padding: 5px;
+            cursor: pointer;
         }
 
+        /* Lista de Eventos (Design Mosaico) */
         .event-item {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            background-color: #fff;
-            border-left: 5px solid; /* Cor do evento */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            background-color: #2a2a2d; /* Fundo base */
+            display: grid;
+            grid-template-columns: 5px 1fr;
+            gap: 12px;
+        }
+
+        .event-color-strip {
+            height: 100%;
+            border-radius: 2.5px;
+        }
+
+        .event-content {
+            display: flex;
+            flex-direction: column;
         }
 
         .event-title {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            color: white;
+            text-transform: uppercase;
         }
 
-        /* Navegação Inferior */
-        nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: var(--nav-bg);
-            display: flex;
-            border-top: 1px solid var(--border-color);
+        .event-value, .event-notes {
+            color: #aaa;
+            font-size: 0.9rem;
         }
 
-        nav button {
-            flex: 1;
-            padding: 15px 0;
-            background: none;
-            border: none;
-            font-size: 1rem;
-            font-weight: bold;
-            color: #888;
-            cursor: pointer;
-        }
-
-        nav button.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-        }
     </style>
 </head>
 <body>
 
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+
     <header>
-        <div id="clock">A carregar data e hora...</div>
+        <div id="monthYearDisplay">Mês Ano</div>
+        <div id="clock">Data • Hora</div>
+        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
     </header>
+
+    <nav id="hamburgerMenu">
+        <ul>
+            <li><a href="#" class="active" onclick="switchTab('home', this)">Calendário</a></li>
+            <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
+        </ul>
+    </nav>
 
     <main>
         <section id="tab-home" class="tab-content active">
-            <div class="month-header" id="monthYearDisplay"></div>
             <div class="calendar-grid">
-                <div class="weekday">D</div>
-                <div class="weekday">S</div>
-                <div class="weekday">T</div>
-                <div class="weekday">Q</div>
-                <div class="weekday">Q</div>
-                <div class="weekday">S</div>
-                <div class="weekday">S</div>
+                <div class="weekday">DOM</div>
+                <div class="weekday">SEG</div>
+                <div class="weekday">TER</div>
+                <div class="weekday">QUA</div>
+                <div class="weekday">QUI</div>
+                <div class="weekday">SEX</div>
+                <div class="weekday">SÁB</div>
             </div>
             <div class="calendar-grid" id="calendarDays">
                 </div>
@@ -218,7 +327,7 @@
 
         <section id="tab-daily" class="tab-content">
             <div class="daily-header">
-                <button class="btn-back" onclick="switchTab('home')">❮ Voltar</button>
+                <button class="btn-back" onclick="switchTab('home')">❮</button>
                 <h2 id="dailyDateDisplay"></h2>
             </div>
             <div id="dailyEventsList">
@@ -235,15 +344,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="eventColor">Cor (Obrigatório)</label>
-                    <select id="eventColor" required>
-                        <option value="" disabled selected>Seleciona uma cor</option>
-                        <option value="#4A90E2">Azul</option>
-                        <option value="#50E3C2">Verde</option>
-                        <option value="#F5A623">Laranja</option>
-                        <option value="#9013FE">Roxo</option>
-                        <option value="#E24A68">Vermelho</option>
-                    </select>
+                    <label for="eventColor">Paleta de Cor (Livre)</label>
+                    <input type="color" id="eventColor" value="#4A90E2" required>
                 </div>
 
                 <div class="form-group">
@@ -262,47 +364,52 @@
         </section>
     </main>
 
-    <nav>
-        <button id="nav-home" class="active" onclick="switchTab('home')">Calendário</button>
-        <button id="nav-insert" onclick="switchTab('insert')">Inserir</button>
-    </nav>
-
     <script>
-        // 1. Relógio a contar no topo
+        // --- 1. Menu Hambúrguer ---
+        const menu = document.getElementById('hamburgerMenu');
+        const overlay = document.getElementById('menuOverlay');
+
+        function toggleMenu() {
+            menu.classList.toggle('open');
+            overlay.classList.toggle('open');
+        }
+
+        // --- 2. Relógio a contar no topo ---
         function updateClock() {
             const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
             const dateStr = now.toLocaleDateString('pt-PT', options);
-            const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
             
-            // Colocar primeira letra da data em maiúscula para ficar bonito
-            const finalDateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+            // Títulos em maiúsculas
+            const finalDateStr = dateStr.toUpperCase();
             document.getElementById('clock').innerText = `${finalDateStr} • ${timeStr}`;
         }
         setInterval(updateClock, 1000);
         updateClock(); // Iniciar imediatamente
 
-        // 2. Navegação entre Separadores
-        function switchTab(tabName) {
-            // Esconder todos os conteúdos
+        // --- 3. Navegação entre Separadores via Menu ---
+        function switchTab(tabName, linkElement = null) {
+            // Esconder conteúdos
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            // Tirar o foco de todos os botões
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+            // Tirar o foco de todos os links do menu
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
             
             // Mostrar o separador selecionado
             document.getElementById('tab-' + tabName).classList.add('active');
             
-            // Atualizar o botão de navegação ativo (Diário não tem botão próprio na barra inferior)
-            if(tabName !== 'daily') {
-                document.getElementById('nav-' + tabName).classList.add('active');
+            // Atualizar o link ativo
+            if (linkElement) {
+                linkElement.classList.add('active');
+                toggleMenu(); // Fechar o menu após a seleção
             }
 
-            // Se voltarmos à home, recarregar o calendário (para refletir novas entradas)
-            if(tabName === 'home') renderCalendar();
+            // Se for para a Home, renderizar para mostrar novos marcadores
+            if (tabName === 'home') renderCalendar();
         }
 
-        // 3. Lógica do Calendário Mensal
-        const currentDate = new Date(); // Usado para navegação se quisermos adicionar depois
+        // --- 4. Lógica do Calendário Mensal Compacto ---
+        let currentDate = new Date(); // Usado para navegação se quisermos adicionar depois
         
         function renderCalendar() {
             const today = new Date();
@@ -323,6 +430,9 @@
                 calendarDays.innerHTML += `<div></div>`;
             }
 
+            // Obter eventos existentes para marcadores
+            let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
+
             // Preencher os dias do mês
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayDiv = document.createElement('div');
@@ -332,10 +442,28 @@
                 // Formato YYYY-MM-DD para referência cruzada
                 const dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 
-                // Se for o dia de hoje, adiciona a classe que preenche a bola
+                // Se for o dia de hoje, destaca
                 if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                     dayDiv.classList.add('today');
                 }
+
+                // --- NOVO: Lógica de Marcadores de Cores ---
+                let dayEvents = allEvents[dateStr] || [];
+                if (dayEvents.length > 0) {
+                    const markersContainer = document.createElement('div');
+                    markersContainer.classList.add('event-markers-container');
+                    
+                    // Mostra até 3 marcadores por dia para não encher
+                    dayEvents.slice(0, 3).forEach(ev => {
+                        const marker = document.createElement('div');
+                        marker.classList.add('event-marker');
+                        marker.style.backgroundColor = ev.color;
+                        markersContainer.appendChild(marker);
+                    });
+                    
+                    dayDiv.appendChild(markersContainer);
+                }
+                // --- FIM DOS MARCADORES ---
 
                 // Ao carregar num dia, abre a vista diária
                 dayDiv.onclick = () => openDailyView(dateStr, i, monthNames[month], year);
@@ -345,7 +473,7 @@
         }
         renderCalendar(); // Renderizar ao iniciar
 
-        // 4. Lógica de "OUTROS" (abrir caixa de texto)
+        // --- 5. Lógica de "OUTROS" ---
         const typeInput = document.getElementById('eventType');
         const notesInput = document.getElementById('eventNotes');
 
@@ -360,7 +488,7 @@
             }
         });
 
-        // 5. Guardar Registo (Local Storage)
+        // --- 6. Guardar Registo (Local Storage) ---
         document.getElementById('insertForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -372,7 +500,6 @@
 
             const newEvent = { color, type, value, notes };
 
-            // Vai buscar eventos existentes ou cria array vazio
             let events = JSON.parse(localStorage.getItem('agendaEvents')) || {};
             
             if (!events[date]) {
@@ -380,56 +507,54 @@
             }
             events[date].push(newEvent);
 
-            // Guarda no LocalStorage
             localStorage.setItem('agendaEvents', JSON.stringify(events));
 
-            alert('Registo guardado com sucesso!');
             this.reset(); // Limpa o formulário
-            notesInput.style.display = 'none'; // Esconde a textarea novamente
+            notesInput.style.display = 'none'; 
             
             // Volta para o calendário
             switchTab('home');
         });
 
-        // 6. Abrir o DIÁRIO (Vista Diária)
+        // --- 7. Abrir o DIÁRIO (Vista Diária com Design Mosaico) ---
         function openDailyView(dateStr, day, monthName, year) {
-            // Atualizar o título do separador
-            document.getElementById('dailyDateDisplay').innerText = `${day} de ${monthName} de ${year}`;
+            document.getElementById('dailyDateDisplay').innerText = `${day} ${monthName} ${year}`;
             
             const dailyEventsList = document.getElementById('dailyEventsList');
-            dailyEventsList.innerHTML = ''; // Limpar vista anterior
+            dailyEventsList.innerHTML = ''; 
 
-            // Ir buscar os eventos guardados para esta data
             let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
             let dayEvents = allEvents[dateStr] || [];
 
             if (dayEvents.length === 0) {
-                dailyEventsList.innerHTML = '<p style="color: #888; text-align: center; margin-top: 30px;">Não existem registos para este dia.</p>';
+                dailyEventsList.innerHTML = '<p style="color: #666; text-align: center; margin-top: 30px;">Não existem registos.</p>';
             } else {
                 dayEvents.forEach(ev => {
                     let eventHTML = `
-                        <div class="event-item" style="border-left-color: ${ev.color};">
-                            <div class="event-title" style="color: ${ev.color};">${ev.type.toUpperCase()}</div>
+                        <div class="event-item">
+                            <div class="event-color-strip" style="background-color: ${ev.color};"></div>
+                            <div class="event-content">
+                                <div class="event-title">${ev.type}</div>
                     `;
                     if (ev.value) {
-                        eventHTML += `<div><strong>Valor:</strong> ${ev.value}</div>`;
+                        eventHTML += `<div class="event-value">${ev.value}</div>`;
                     }
                     if (ev.notes) {
-                        eventHTML += `<div style="margin-top: 10px; font-style: italic; color: #555;">"${ev.notes}"</div>`;
+                        eventHTML += `<div class="event-notes">"${ev.notes}"</div>`;
                     }
-                    eventHTML += `</div>`;
+                    eventHTML += `</div></div>`;
                     dailyEventsList.innerHTML += eventHTML;
                 });
             }
 
-            // Pré-preencher o campo de data no separador "Inserir" com o dia selecionado
+            // Pré-preencher a data no formulário
             document.getElementById('eventDate').value = dateStr;
 
             // Mudar para o separador do Diário
             switchTab('daily');
         }
 
-        // Definir a data de hoje por defeito no formulário de inserir ao abrir a página
+        // Preencher data de hoje por defeito
         document.getElementById('eventDate').valueAsDate = new Date();
     </script>
 </body>
