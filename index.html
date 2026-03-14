@@ -2,14 +2,13 @@
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Agenda iOS Style</title>
     <style>
-        /* Variáveis de Cores - Estilo iOS mas com Fundo Creme */
         :root {
-            --bg-color: #F9F8F4; /* Fundo creme suave */
+            --bg-color: #F9F8F4; 
             --text-color: #000000;
-            --primary-color: #FF3B30; /* Vermelho iOS para destaques */
+            --primary-color: #FF3B30; 
             --nav-bg: #F4F3EF;
             --border-color: #E5E5EA;
             --gray-text: #8E8E93;
@@ -25,17 +24,17 @@
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding-top: 60px;
+            padding-top: 110px; /* Aumentado para descolar bem do topo do telemóvel */
             overflow-x: hidden;
         }
 
-        /* Cabeçalho Fixo */
+        /* Cabeçalho Fixo (Descolado do Topo do Ecrã) */
         header {
             background-color: var(--bg-color);
-            padding: 10px 15px;
+            /* O padding-top de 40px afasta os botões da barra de notificações do telemóvel */
+            padding: 40px 15px 10px; 
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             position: fixed;
             top: 0;
             left: 0;
@@ -44,10 +43,25 @@
             z-index: 1000;
         }
 
+        #clock {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
         .header-controls {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            width: 100%;
+        }
+
+        .month-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         #monthYearDisplay {
@@ -69,17 +83,18 @@
             background: none;
             border: none;
             color: var(--primary-color);
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             cursor: pointer;
+            padding: 5px;
         }
 
         /* Menu de Navegação Hambúrguer */
         nav {
             position: fixed;
-            top: 60px;
+            top: 110px; /* Alinhado com a nova altura do cabeçalho */
             left: -100%;
             width: 70%;
-            height: calc(100% - 60px);
+            height: calc(100% - 110px);
             background-color: var(--nav-bg);
             border-right: 1px solid var(--border-color);
             transition: left 0.3s ease;
@@ -103,7 +118,7 @@
         .tab-content { display: none; padding: 15px; }
         .tab-content.active { display: block; }
 
-        /* Calendário Mensal (Aumentado) */
+        /* Calendário Mensal (Dias Aumentados com Texto) */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -127,23 +142,27 @@
         }
 
         .day {
-            min-height: 70px; /* Aumentado para ocupar mais o ecrã */
+            min-height: 100px; /* Quadrados maiores */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 10px;
-            font-size: 1.3rem; /* Números maiores */
+            padding-top: 5px;
+            font-size: 1.2rem; 
             cursor: pointer;
             border-bottom: 1px solid #f0efeb;
+            border-right: 1px solid #f0efeb; /* Linha muito subtil a dividir os dias */
+            overflow: hidden;
         }
+        .day:nth-child(7n) { border-right: none; }
 
         .day-number {
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            margin-bottom: 3px;
         }
 
         .day.today .day-number {
@@ -152,11 +171,25 @@
             font-weight: bold;
         }
 
-        .event-markers-container {
-            display: flex; gap: 3px; margin-top: 5px;
+        /* Novo design para os textos das tarefas na grelha mensal */
+        .events-container {
+            width: 95%;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
         }
-        .event-marker {
-            width: 6px; height: 6px; border-radius: 50%;
+
+        .event-text {
+            font-size: 0.55rem;
+            color: var(--text-color);
+            text-align: left;
+            border-left: 2px solid;
+            padding-left: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background-color: rgba(0,0,0,0.03); /* Fundo muito transparente para o texto sobressair */
+            border-radius: 2px;
         }
 
         /* Vista Anual */
@@ -220,7 +253,7 @@
             color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
         }
 
-        /* Modal de Modelos Rápidos */
+        /* Modal de Eventos Rápidos */
         #templatesModal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.4); z-index: 1001; align-items: center; justify-content: center;
@@ -240,12 +273,16 @@
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
     <header>
+        <div id="clock">A carregar data...</div>
+        
         <div class="header-controls">
-            <button class="nav-arrow" onclick="changeMonth(-1)">❮</button>
-            <div id="monthYearDisplay">Mês Ano</div>
-            <button class="nav-arrow" onclick="changeMonth(1)">❯</button>
+            <div class="month-nav-group">
+                <button class="nav-arrow" onclick="changeMonth(-1)">❮</button>
+                <div id="monthYearDisplay">Mês Ano</div>
+                <button class="nav-arrow" onclick="changeMonth(1)">❯</button>
+            </div>
+            <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
         </div>
-        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
     </header>
 
     <nav id="hamburgerMenu">
@@ -309,16 +346,29 @@
 
     <div id="templatesModal" onclick="closeTemplatesModal(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 style="margin-bottom: 15px; color: var(--primary-color);">Modelos Guardados</h3>
+            <h3 style="margin-bottom: 15px; color: var(--primary-color);">Eventos</h3>
             <div id="templatesList"></div>
             <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: var(--gray-text);">Cancelar</button>
         </div>
     </div>
 
     <script>
+        // --- 1. Relógio do Topo ---
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('pt-PT', options);
+            const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            const finalDateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+            document.getElementById('clock').innerText = `${finalDateStr} • ${timeStr}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock(); 
+
         // Navegação e Variáveis Globais
         let currentDate = new Date();
-        let currentDailyDateStr = ""; // Guarda o dia que está aberto na vista diária
+        let currentDailyDateStr = "";
 
         function toggleMenu() {
             document.getElementById('hamburgerMenu').classList.toggle('open');
@@ -339,7 +389,6 @@
             if (tabName === 'yearly') renderYearly();
         }
 
-        // Lógica dos Meses (Avançar / Recuar)
         function changeMonth(direction) {
             currentDate.setMonth(currentDate.getMonth() + direction);
             renderCalendar();
@@ -380,17 +429,22 @@
                     numDiv = `<div class="day-number" style="background-color: var(--primary-color); color: white;">${i}</div>`;
                 }
 
-                let markersHTML = '';
+                // --- NOVO: Textos em vez de pontos ---
+                let eventsHTML = '';
                 let dayEvents = allEvents[dateStr] || [];
                 if (dayEvents.length > 0) {
-                    markersHTML = '<div class="event-markers-container">';
+                    eventsHTML = '<div class="events-container">';
+                    // Mostra o texto das primeiras 4 tarefas para caber bem
                     dayEvents.slice(0, 4).forEach(ev => {
-                        markersHTML += `<div class="event-marker" style="background-color: ${ev.color};"></div>`;
+                        eventsHTML += `<div class="event-text" style="border-left-color: ${ev.color};">${ev.type}</div>`;
                     });
-                    markersHTML += '</div>';
+                    if (dayEvents.length > 4) {
+                        eventsHTML += `<div style="font-size: 0.5rem; color: var(--gray-text); text-align: left; padding-left: 3px;">+${dayEvents.length - 4} mais</div>`;
+                    }
+                    eventsHTML += '</div>';
                 }
 
-                dayDiv.innerHTML = numDiv + markersHTML;
+                dayDiv.innerHTML = numDiv + eventsHTML;
                 dayDiv.onclick = () => openDailyView(dateStr, i, monthNames[month], year);
                 calendarDays.appendChild(dayDiv);
             }
@@ -420,9 +474,9 @@
             }
         }
 
-        renderCalendar(); // Iniciar
+        renderCalendar(); 
 
-        // Lógica Inserir e Modelos
+        // Lógica Inserir
         const typeInput = document.getElementById('eventType');
         const notesInput = document.getElementById('eventNotes');
 
@@ -445,13 +499,11 @@
 
             const newEvent = { color, type, value, notes };
 
-            // Guardar o Evento
             let events = JSON.parse(localStorage.getItem('agendaEvents')) || {};
             if (!events[date]) events[date] = [];
             events[date].push(newEvent);
             localStorage.setItem('agendaEvents', JSON.stringify(events));
 
-            // Guardar como Modelo se a caixa estiver selecionada
             if(saveTemplate) {
                 let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
                 templates.push({ color, type, value });
@@ -510,22 +562,21 @@
                 let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
                 allEvents[dateStr].splice(index, 1);
                 
-                // Se o array ficar vazio, remove a data do objeto para manter limpo
                 if(allEvents[dateStr].length === 0) delete allEvents[dateStr];
                 
                 localStorage.setItem('agendaEvents', JSON.stringify(allEvents));
-                renderDailyEvents(); // Atualiza a lista na hora
+                renderDailyEvents(); 
             }
         }
 
-        // Lógica do Modal de Modelos (Botão +)
+        // Lógica do Modal de Eventos (Botão +)
         function openTemplatesModal() {
             const templatesList = document.getElementById('templatesList');
             let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
             
             templatesList.innerHTML = '';
             if(templates.length === 0) {
-                templatesList.innerHTML = '<p style="color: var(--gray-text); text-align:center;">Ainda não guardaste nenhum modelo.</p>';
+                templatesList.innerHTML = '<p style="color: var(--gray-text); text-align:center;">Ainda não guardaste nenhum evento.</p>';
             } else {
                 templates.forEach(t => {
                     const btn = document.createElement('button');
