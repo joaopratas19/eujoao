@@ -5,20 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Agenda iOS Style</title>
     <style>
-        /* NOVA PALETA DE CORES IMEDIATA */
+        /* NOVA PALETA DE CORES COM ALTO CONTRASTE */
         :root {
             /* Fundo azul muito escuro e profundo */
             --app-bg: #0F172A; 
             /* Fundo dos componentes (cabeçalho, itens, menu) mais claro que o app-bg */
             --bg-color: #1E293B; 
-            /* Texto principal em preto puro */
-            --text-color: #000000; 
-            /* Destaques principais (nomes meses, ícones active) em preto puro */
-            --primary-color: #000000; 
+            /* Texto principal em amarelo vibrante */
+            --text-color: #FDE047; 
+            /* Destaques principais (nomes meses, ícones active) em amarelo vibrante */
+            --primary-color: #FDE047; 
             /* Fundo secundário para inputs, etc */
             --secondary-bg: #334155;
-            /* Texto secundário em cinza escuro */
-            --gray-text: #475569; 
             /* REMOÇÃO DE LINHAS: Borda transparente */
             --border-color: transparent; 
         }
@@ -54,7 +52,7 @@
         #clock {
             text-align: center;
             font-size: 0.85rem;
-            color: var(--gray-text); /* Texto cinza escuro contra o fundo componente */
+            color: var(--text-color); /* Texto amarelo contra o fundo componente */
             margin-bottom: 8px;
             font-weight: 500;
         }
@@ -75,13 +73,13 @@
         #monthYearDisplay {
             font-size: 1.3rem;
             font-weight: 600;
-            color: var(--primary-color); /* Nomes meses a preto */
+            color: var(--primary-color); /* Nomes meses a amarelo */
         }
 
         .nav-arrow {
             background: none;
             border: none;
-            color: var(--primary-color); /* Setas a preto */
+            color: var(--primary-color); /* Setas a amarelo */
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0 10px;
@@ -90,7 +88,7 @@
         .hamburger-btn {
             background: none;
             border: none;
-            color: var(--primary-color); /* Ícone menu a preto */
+            color: var(--primary-color); /* Ícone menu a amarelo */
             font-size: 1.6rem;
             cursor: pointer;
             padding: 5px;
@@ -113,8 +111,8 @@
         nav.open { left: 0; }
         nav ul { list-style: none; }
         nav li { margin-bottom: 20px; padding-bottom: 10px; }
-        nav a { text-decoration: none; color: var(--gray-text); font-size: 1.2rem; display: block; font-weight: bold; }
-        nav a.active { color: var(--primary-color); } /* Active a preto */
+        nav a { text-decoration: none; color: var(--text-color); font-size: 1.2rem; display: block; font-weight: bold; }
+        nav a.active { color: var(--primary-color); } /* Active a amarelo */
 
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -142,7 +140,7 @@
 
         .weekday {
             font-size: 0.75rem;
-            color: var(--gray-text); /* Dias semana a cinza escuro */
+            color: var(--text-color); /* Dias semana a amarelo */
             text-transform: uppercase;
             font-weight: bold;
         }
@@ -157,7 +155,7 @@
             cursor: pointer;
             overflow: hidden;
             font-weight: bold; /* Dias a negrito */
-            color: var(--gray-text); /* Números a cinza escuro padrão */
+            color: var(--text-color); /* Números a amarelo padrão */
         }
 
         .day-number {
@@ -170,10 +168,10 @@
             margin-bottom: 3px;
         }
 
-        /* Dia de hoje: Destaque preto com número preto */
+        /* Dia de hoje: Destaque amarelo com número preto */
         .day.today .day-number {
             background-color: var(--primary-color);
-            color: #ffffff; /* Número branco no fundo preto para legibilidade */
+            color: #000000; /* Número preto no fundo amarelo para legibilidade */
         }
 
         .events-container {
@@ -185,14 +183,14 @@
 
         .event-text {
             font-size: 0.55rem;
-            color: #ffffff; /* Texto evento branco para ler sobre cores aleatórias */
+            color: #000000; /* Texto evento preto para ler sobre cores aleatórias */
             text-align: left;
             border-left: 2px solid;
             padding-left: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            background-color: rgba(255,255,255,0.1); 
+            background-color: rgba(255,255,255,0.7); 
             border-radius: 2px;
             font-weight: normal;
         }
@@ -204,14 +202,14 @@
             gap: 15px 10px;
         }
         .mini-month-title {
-            color: var(--primary-color); /* Meses anual a preto */
+            color: var(--primary-color); /* Meses anual a amarelo */
             font-weight: bold;
             font-size: 0.9rem;
             margin-bottom: 5px;
         }
         .mini-calendar { font-size: 0.55rem; text-align: center; font-weight: bold; }
         .mini-calendar .weekday { font-size: 0.5rem; margin-bottom: 2px;}
-        .mini-day { padding: 2px 0; color: var(--gray-text); }
+        .mini-day { padding: 2px 0; color: var(--text-color); }
 
         /* Vista Diária Opaca, SEM LINHAS */
         .daily-header {
@@ -235,31 +233,31 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             display: flex; justify-content: space-between; align-items: center;
             border-left: 5px solid;
-            color: #ffffff; /* Texto branco no componente escuro */
+            color: var(--text-color); /* Texto amarelo no componente escuro */
         }
         .event-info { flex-grow: 1; }
-        .event-title { font-weight: bold; font-size: 1.1rem; color: #ffffff; }
+        .event-title { font-weight: bold; font-size: 1.1rem; color: var(--text-color); }
         .btn-delete {
             background: none; border: none; color: var(--primary-color);
             font-size: 1.2rem; cursor: pointer; padding: 10px;
         }
 
         /* Formulários Opacos, SEM LINHAS visíveis */
-        h2 { color: var(--primary-color); margin-bottom: 15px; } /* Títulos form a preto */
-        label { display: block; margin-bottom: 5px; color: var(--gray-text); font-size: 0.9rem; font-weight: bold;}
+        h2 { color: var(--primary-color); margin-bottom: 15px; } /* Títulos form a amarelo */
+        label { display: block; margin-bottom: 5px; color: var(--text-color); font-size: 0.9rem; font-weight: bold;}
         input[type="text"], input[type="date"], textarea, select {
             width: 100%; padding: 12px; margin-bottom: 15px;
             border-radius: 8px;
-            background-color: var(--secondary-bg); font-size: 1rem; color: #ffffff;
+            background-color: var(--secondary-bg); font-size: 1rem; color: var(--text-color);
             border: none;
         }
         input[type="color"] { width: 100%; height: 50px; border: none; margin-bottom: 15px; background: none;}
         .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
         .checkbox-group input { transform: scale(1.3); }
-        .checkbox-group label { color: var(--gray-text); }
+        .checkbox-group label { color: var(--text-color); }
         button.btn-submit {
             width: 100%; padding: 15px; background-color: var(--primary-color);
-            color: #ffffff; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
+            color: #000000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
         }
 
         /* Modal opaco, SEM LINHAS */
@@ -269,12 +267,12 @@
         }
         .modal-content {
             background: var(--bg-color); width: 85%; border-radius: 12px; padding: 20px; max-height: 80vh; overflow-y: auto;
-            color: #ffffff;
+            color: var(--text-color);
         }
         .template-btn {
             width: 100%; text-align: left; padding: 15px; margin-bottom: 10px;
             background: var(--secondary-bg); border-radius: 8px; font-size: 1rem;
-            border-left: 5px solid; cursor: pointer; color: #ffffff;
+            border-left: 5px solid; cursor: pointer; color: var(--text-color);
             border-top: none; border-right: none; border-bottom: none;
         }
     </style>
@@ -359,7 +357,7 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <h3 style="margin-bottom: 15px; color: var(--primary-color);">Eventos</h3>
             <div id="templatesList"></div>
-            <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: #ffffff; font-weight: bold; cursor: pointer;">Cancelar</button>
+            <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: var(--text-color); font-weight: bold; cursor: pointer;">Cancelar</button>
         </div>
     </div>
 
@@ -434,7 +432,7 @@
                 
                 let numDiv = `<div class="day-number">${i}</div>`;
                 if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    numDiv = `<div class="day-number" style="background-color: var(--primary-color); color: white;">${i}</div>`;
+                    numDiv = `<div class="day-number" style="background-color: var(--primary-color); color: black;">${i}</div>`;
                 }
 
                 let eventsHTML = '';
@@ -445,7 +443,7 @@
                         eventsHTML += `<div class="event-text" style="border-left-color: ${ev.color};">${ev.type}</div>`;
                     });
                     if (dayEvents.length > 4) {
-                        eventsHTML += `<div style="font-size: 0.5rem; color: #ffffff; text-align: left; padding-left: 3px;">+${dayEvents.length - 4} mais</div>`;
+                        eventsHTML += `<div style="font-size: 0.5rem; color: var(--text-color); text-align: left; padding-left: 3px;">+${dayEvents.length - 4} mais</div>`;
                     }
                     eventsHTML += '</div>';
                 }
@@ -541,7 +539,7 @@
             let dayEvents = allEvents[currentDailyDateStr] || [];
 
             if (dayEvents.length === 0) {
-                dailyEventsList.innerHTML = '<p style="color: #ffffff; text-align: center; margin-top: 50px;">Nenhum Evento</p>';
+                dailyEventsList.innerHTML = '<p style="color: var(--text-color); text-align: center; margin-top: 50px;">Nenhum Evento</p>';
             } else {
                 dayEvents.forEach((ev, index) => {
                     let eventHTML = `
@@ -549,8 +547,8 @@
                             <div class="event-info">
                                 <div class="event-title">${ev.type}</div>
                     `;
-                    if (ev.value) eventHTML += `<div style="color: #ffffff; font-size: 0.9rem;">${ev.value}</div>`;
-                    if (ev.notes) eventHTML += `<div style="color: #ffffff; font-style: italic; font-size: 0.9rem;">"${ev.notes}"</div>`;
+                    if (ev.value) eventHTML += `<div style="color: var(--text-color); font-size: 0.9rem;">${ev.value}</div>`;
+                    if (ev.notes) eventHTML += `<div style="color: var(--text-color); font-style: italic; font-size: 0.9rem;">"${ev.notes}"</div>`;
                     
                     eventHTML += `</div>
                             <button class="btn-delete" onclick="deleteEvent('${currentDailyDateStr}', ${index})">🗑️</button>
@@ -578,7 +576,7 @@
             
             templatesList.innerHTML = '';
             if(templates.length === 0) {
-                templatesList.innerHTML = '<p style="color: #ffffff; text-align:center;">Ainda não guardaste nenhum evento.</p>';
+                templatesList.innerHTML = '<p style="color: var(--text-color); text-align:center;">Ainda não guardaste nenhum evento.</p>';
             } else {
                 templates.forEach(t => {
                     const btn = document.createElement('button');
