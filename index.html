@@ -26,7 +26,7 @@
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            border: none; /* Remoção global de bordas padrão */
+            border: none; 
         }
 
         body {
@@ -52,7 +52,7 @@
         #clock {
             text-align: center;
             font-size: 0.85rem;
-            color: var(--text-color); /* Texto amarelo contra o fundo componente */
+            color: var(--text-color); 
             margin-bottom: 8px;
             font-weight: 500;
         }
@@ -73,13 +73,13 @@
         #monthYearDisplay {
             font-size: 1.3rem;
             font-weight: 600;
-            color: var(--primary-color); /* Nomes meses a amarelo */
+            color: var(--primary-color); 
         }
 
         .nav-arrow {
             background: none;
             border: none;
-            color: var(--primary-color); /* Setas a amarelo */
+            color: var(--primary-color); 
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0 10px;
@@ -88,7 +88,7 @@
         .hamburger-btn {
             background: none;
             border: none;
-            color: var(--primary-color); /* Ícone menu a amarelo */
+            color: var(--primary-color); 
             font-size: 1.6rem;
             cursor: pointer;
             padding: 5px;
@@ -112,7 +112,7 @@
         nav ul { list-style: none; }
         nav li { margin-bottom: 20px; padding-bottom: 10px; }
         nav a { text-decoration: none; color: var(--text-color); font-size: 1.2rem; display: block; font-weight: bold; }
-        nav a.active { color: var(--primary-color); } /* Active a amarelo */
+        nav a.active { color: var(--primary-color); } 
 
         .menu-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -140,7 +140,7 @@
 
         .weekday {
             font-size: 0.75rem;
-            color: var(--text-color); /* Dias semana a amarelo */
+            color: var(--text-color); 
             text-transform: uppercase;
             font-weight: bold;
         }
@@ -154,8 +154,8 @@
             font-size: 1.2rem; 
             cursor: pointer;
             overflow: hidden;
-            font-weight: bold; /* Dias a negrito */
-            color: var(--text-color); /* Números a amarelo padrão */
+            font-weight: bold; 
+            color: var(--text-color); 
         }
 
         .day-number {
@@ -168,10 +168,9 @@
             margin-bottom: 3px;
         }
 
-        /* Dia de hoje: Destaque amarelo com número preto */
         .day.today .day-number {
             background-color: var(--primary-color);
-            color: #000000; /* Número preto no fundo amarelo para legibilidade */
+            color: #000000; 
         }
 
         .events-container {
@@ -183,7 +182,7 @@
 
         .event-text {
             font-size: 0.55rem;
-            color: #000000; /* Texto evento preto para ler sobre cores aleatórias */
+            color: #000000; 
             text-align: left;
             border-left: 2px solid;
             padding-left: 3px;
@@ -202,7 +201,7 @@
             gap: 15px 10px;
         }
         .mini-month-title {
-            color: var(--primary-color); /* Meses anual a amarelo */
+            color: var(--primary-color); 
             font-weight: bold;
             font-size: 0.9rem;
             margin-bottom: 5px;
@@ -226,14 +225,13 @@
             color: var(--primary-color); cursor: pointer; font-weight: 300;
         }
 
-        /* Eventos na Vista Diária opacos, SEM LINHAS */
         .event-item {
             background-color: var(--bg-color);
             padding: 15px; border-radius: 10px; margin-bottom: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             display: flex; justify-content: space-between; align-items: center;
             border-left: 5px solid;
-            color: var(--text-color); /* Texto amarelo no componente escuro */
+            color: var(--text-color); 
         }
         .event-info { flex-grow: 1; }
         .event-title { font-weight: bold; font-size: 1.1rem; color: var(--text-color); }
@@ -242,8 +240,32 @@
             font-size: 1.2rem; cursor: pointer; padding: 10px;
         }
 
+        /* Aba de Contas (NOVO) */
+        .contas-item {
+            background-color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .contas-desc { font-weight: bold; font-size: 1rem; color: var(--text-color); }
+        .contas-val { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
+        .contas-total-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--secondary-bg);
+            border-radius: 10px;
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
         /* Formulários Opacos, SEM LINHAS visíveis */
-        h2 { color: var(--primary-color); margin-bottom: 15px; } /* Títulos form a amarelo */
+        h2 { color: var(--primary-color); margin-bottom: 15px; } 
         label { display: block; margin-bottom: 5px; color: var(--text-color); font-size: 0.9rem; font-weight: bold;}
         input[type="text"], input[type="date"], textarea, select {
             width: 100%; padding: 12px; margin-bottom: 15px;
@@ -298,7 +320,7 @@
         <ul>
             <li><a href="#" class="active" onclick="switchTab('home', this)">Vista Mensal</a></li>
             <li><a href="#" onclick="switchTab('yearly', this)">Vista Anual</a></li>
-            <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
+            <li><a href="#" onclick="switchTab('contas', this)">Contas</a></li> <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
         </ul>
     </nav>
 
@@ -314,6 +336,17 @@
         <section id="tab-yearly" class="tab-content">
             <h2 id="yearlyTitle" style="text-align:center; margin-bottom: 20px;">Ano</h2>
             <div id="yearly-grid"></div>
+        </section>
+
+        <section id="tab-contas" class="tab-content">
+            <div class="daily-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+                <h2 id="contasMonthDisplay" style="font-size: 1.3rem;">Contas</h2>
+            </div>
+            <div id="contasList">
+                </div>
+            <div id="contasTotal" class="contas-total-box">
+                Total: 0.00 €
+            </div>
         </section>
 
         <section id="tab-daily" class="tab-content">
@@ -394,14 +427,14 @@
 
             if (tabName === 'home') renderCalendar();
             if (tabName === 'yearly') renderYearly();
+            if (tabName === 'contas') renderContas(); // ATUALIZA A NOVA ABA
         }
 
         function changeMonth(direction) {
             currentDate.setMonth(currentDate.getMonth() + direction);
             renderCalendar();
-            if(document.getElementById('tab-yearly').classList.contains('active')) {
-                renderYearly();
-            }
+            if(document.getElementById('tab-yearly').classList.contains('active')) renderYearly();
+            if(document.getElementById('tab-contas').classList.contains('active')) renderContas(); // ATUALIZA SE MUDAR DE MÊS NAS CONTAS
         }
 
         const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -475,6 +508,53 @@
                 monthHTML += `</div></div>`;
                 yearlyGrid.innerHTML += monthHTML;
             }
+        }
+
+        // LÓGICA DA NOVA ABA CONTAS
+        function renderContas() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            document.getElementById('contasMonthDisplay').innerText = `Contas de ${monthNames[month]}`;
+
+            const contasList = document.getElementById('contasList');
+            contasList.innerHTML = '';
+            let total = 0;
+            let hasEntries = false;
+
+            let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                let dayEvents = allEvents[dateStr] || [];
+
+                dayEvents.forEach(ev => {
+                    // Verifica se o campo "valor" existe e tem algo escrito
+                    if (ev.value && ev.value.trim() !== "") {
+                        // Limpa o texto, mantendo apenas números, pontos ou vírgulas, converte vírgula para ponto
+                        let cleanValue = ev.value.replace(',', '.').replace(/[^0-9.-]+/g, "");
+                        let numValue = parseFloat(cleanValue);
+                        
+                        if (!isNaN(numValue)) {
+                            hasEntries = true;
+                            total += numValue;
+                            
+                            contasList.innerHTML += `
+                                <div class="contas-item" style="border-left: 5px solid ${ev.color};">
+                                    <div class="contas-desc">Dia ${i} - ${ev.type}</div>
+                                    <div class="contas-val">${numValue.toFixed(2)} €</div>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+            }
+
+            if (!hasEntries) {
+                contasList.innerHTML = '<p style="text-align: center; color: var(--text-color); margin-top: 30px;">Não tens valores extra registados neste mês.</p>';
+            }
+
+            document.getElementById('contasTotal').innerText = `Total: ${total.toFixed(2)} €`;
         }
 
         renderCalendar(); 
