@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Agenda iOS Style</title>
     <style>
-        /* NOVA PALETA DE CORES COM ALTO CONTRASTE */
+        /* PALETA DE CORES COM ALTO CONTRASTE (INTACTA) */
         :root {
-            /* Fundo azul muito escuro e profundo */
             --app-bg: #0F172A; 
-            /* Fundo dos componentes (cabeçalho, itens, menu) mais claro que o app-bg */
             --bg-color: #1E293B; 
-            /* Texto principal em amarelo vibrante */
             --text-color: #FDE047; 
-            /* Destaques principais (nomes meses, ícones active) em amarelo vibrante */
             --primary-color: #FDE047; 
-            /* Fundo secundário para inputs, etc */
             --secondary-bg: #334155;
-            /* REMOÇÃO DE LINHAS: Borda transparente */
             --border-color: transparent; 
         }
 
@@ -36,7 +30,6 @@
             overflow-x: hidden;
         }
 
-        /* Cabeçalho Fixo curto e opaco, SEM LINHAS */
         header {
             background-color: var(--bg-color);
             padding: 15px 15px 10px;
@@ -94,7 +87,6 @@
             padding: 5px;
         }
 
-        /* Menu de Navegação Hambúrguer opaco, SEM LINHAS */
         nav {
             position: fixed;
             top: 80px; 
@@ -123,7 +115,6 @@
         .tab-content { display: none; padding: 15px; }
         .tab-content.active { display: block; }
 
-        /* Calendário Mensal SEM LINHAS */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -194,7 +185,6 @@
             font-weight: normal;
         }
 
-        /* Vista Anual */
         #yearly-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -210,7 +200,6 @@
         .mini-calendar .weekday { font-size: 0.5rem; margin-bottom: 2px;}
         .mini-day { padding: 2px 0; color: var(--text-color); }
 
-        /* Vista Diária Opaca, SEM LINHAS */
         .daily-header {
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 20px; padding-bottom: 10px;
@@ -240,8 +229,8 @@
             font-size: 1.2rem; cursor: pointer; padding: 10px;
         }
 
-        /* Aba de Contas (NOVO) */
-        .contas-item {
+        /* Aba de Extras (Antiga Aba Contas) */
+        .extras-item {
             background-color: var(--bg-color);
             padding: 15px;
             border-radius: 10px;
@@ -251,9 +240,9 @@
             align-items: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
         }
-        .contas-desc { font-weight: bold; font-size: 1rem; color: var(--text-color); }
-        .contas-val { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
-        .contas-total-box {
+        .extras-desc { font-weight: bold; font-size: 1rem; color: var(--text-color); }
+        .extras-val { font-weight: bold; font-size: 1.1rem; color: var(--primary-color); }
+        .extras-total-box {
             margin-top: 20px;
             padding: 15px;
             background-color: var(--secondary-bg);
@@ -264,10 +253,52 @@
             color: var(--text-color);
         }
 
-        /* Formulários Opacos, SEM LINHAS visíveis */
+        /* NOVA ABA DE CONTAS (RECEITAS E DESPESAS) */
+        .financa-card {
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .financa-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .financa-header h3 { font-size: 1.1rem; color: var(--text-color); margin: 0; }
+        .btn-add-fin {
+            background: none; border: none; font-size: 1.8rem; color: var(--primary-color);
+            cursor: pointer; line-height: 1; font-weight: 300; padding: 0 10px;
+        }
+        .financa-input-row {
+            display: none; /* ESCONDIDO POR DEFEITO */
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .financa-input-row input {
+            padding: 10px; border-radius: 6px; background: var(--secondary-bg);
+            color: var(--text-color); font-size: 0.95rem; margin-bottom: 0;
+        }
+        .financa-input-row button {
+            padding: 0 15px; background: var(--primary-color); color: #000;
+            font-weight: bold; border-radius: 6px; cursor: pointer;
+        }
+        .financa-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 0; border-bottom: 1px solid var(--secondary-bg);
+        }
+        .financa-item:last-child { border-bottom: none; }
+        .financa-item-desc { flex-grow: 1; font-size: 1rem; }
+        .financa-item-val { font-weight: bold; margin-left: 10px; }
+        .btn-del-fin { background: none; border: none; color: var(--primary-color); font-size: 1rem; margin-left: 10px; cursor: pointer;}
+        .financa-total { text-align: right; font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-top: 10px; }
+
+        /* Formulários Opacos */
         h2 { color: var(--primary-color); margin-bottom: 15px; } 
         label { display: block; margin-bottom: 5px; color: var(--text-color); font-size: 0.9rem; font-weight: bold;}
-        input[type="text"], input[type="date"], textarea, select {
+        input[type="text"], input[type="date"], input[type="number"], textarea, select {
             width: 100%; padding: 12px; margin-bottom: 15px;
             border-radius: 8px;
             background-color: var(--secondary-bg); font-size: 1rem; color: var(--text-color);
@@ -282,7 +313,6 @@
             color: #000000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
         }
 
-        /* Modal opaco, SEM LINHAS */
         #templatesModal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 1001; align-items: center; justify-content: center;
@@ -320,7 +350,7 @@
         <ul>
             <li><a href="#" class="active" onclick="switchTab('home', this)">Vista Mensal</a></li>
             <li><a href="#" onclick="switchTab('yearly', this)">Vista Anual</a></li>
-            <li><a href="#" onclick="switchTab('contas', this)">Contas</a></li> <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
+            <li><a href="#" onclick="switchTab('contas', this)">Contas</a></li> <li><a href="#" onclick="switchTab('extras', this)">Extras</a></li> <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
         </ul>
     </nav>
 
@@ -340,13 +370,56 @@
 
         <section id="tab-contas" class="tab-content">
             <div class="daily-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
-                <h2 id="contasMonthDisplay" style="font-size: 1.3rem;">Contas</h2>
+                <h2 id="financasMonthDisplay" style="font-size: 1.3rem;">Contas</h2>
             </div>
-            <div id="contasList">
+
+            <div class="financa-card">
+                <div class="financa-header">
+                    <h3>Receita</h3>
+                    <button class="btn-add-fin" onclick="toggleFinInput('receitaInputRow')">+</button>
                 </div>
-            <div id="contasTotal" class="contas-total-box">
-                Total: 0.00 €
+                <div id="receitaInputRow" class="financa-input-row" style="display: none;">
+                    <input type="number" id="receitaValInput" placeholder="Valor €" style="flex: 1;">
+                    <button onclick="saveReceita()">✔</button>
+                </div>
+                <div id="receitaDisplay" class="financa-total" style="font-size: 1.5rem;">0.00 €</div>
             </div>
+
+            <div class="financa-card">
+                <div class="financa-header">
+                    <h3>Despesas Fixas</h3>
+                    <button class="btn-add-fin" onclick="toggleFinInput('despesasInputRow')">+</button>
+                </div>
+                <div id="despesasInputRow" class="financa-input-row" style="display: none;">
+                    <input type="text" id="despesasDescInput" placeholder="Descrição" style="flex: 1;">
+                    <input type="number" id="despesasValInput" placeholder="€" style="width: 80px; flex: none;">
+                    <button onclick="saveFinancaItem('despesas')">✔</button>
+                </div>
+                <div id="despesasList"></div>
+                <div id="despesasTotal" class="financa-total">0.00 €</div>
+            </div>
+
+            <div class="financa-card">
+                <div class="financa-header">
+                    <h3>Outros Gastos</h3>
+                    <button class="btn-add-fin" onclick="toggleFinInput('outrosInputRow')">+</button>
+                </div>
+                <div id="outrosInputRow" class="financa-input-row" style="display: none;">
+                    <input type="text" id="outrosDescInput" placeholder="Descrição" style="flex: 1;">
+                    <input type="number" id="outrosValInput" placeholder="€" style="width: 80px; flex: none;">
+                    <button onclick="saveFinancaItem('outros')">✔</button>
+                </div>
+                <div id="outrosList"></div>
+                <div id="outrosTotal" class="financa-total">0.00 €</div>
+            </div>
+        </section>
+
+        <section id="tab-extras" class="tab-content">
+            <div class="daily-header" style="justify-content: center; border-bottom: none; padding-bottom: 0;">
+                <h2 id="extrasMonthDisplay" style="font-size: 1.3rem;">Extras</h2>
+            </div>
+            <div id="extrasList"></div>
+            <div id="extrasTotal" class="extras-total-box">Total: 0.00 €</div>
         </section>
 
         <section id="tab-daily" class="tab-content">
@@ -427,14 +500,16 @@
 
             if (tabName === 'home') renderCalendar();
             if (tabName === 'yearly') renderYearly();
-            if (tabName === 'contas') renderContas(); // ATUALIZA A NOVA ABA
+            if (tabName === 'extras') renderExtras(); 
+            if (tabName === 'contas') renderFinancas(); // NOVA ABA CONTAS
         }
 
         function changeMonth(direction) {
             currentDate.setMonth(currentDate.getMonth() + direction);
             renderCalendar();
             if(document.getElementById('tab-yearly').classList.contains('active')) renderYearly();
-            if(document.getElementById('tab-contas').classList.contains('active')) renderContas(); // ATUALIZA SE MUDAR DE MÊS NAS CONTAS
+            if(document.getElementById('tab-extras').classList.contains('active')) renderExtras(); 
+            if(document.getElementById('tab-contas').classList.contains('active')) renderFinancas(); 
         }
 
         const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
@@ -510,14 +585,14 @@
             }
         }
 
-        // LÓGICA DA NOVA ABA CONTAS
-        function renderContas() {
+        /* LÓGICA DA ABA EXTRAS (A ANTIGA ABA CONTAS) */
+        function renderExtras() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-            document.getElementById('contasMonthDisplay').innerText = `Contas de ${monthNames[month]}`;
+            document.getElementById('extrasMonthDisplay').innerText = `Extras de ${monthNames[month]}`;
 
-            const contasList = document.getElementById('contasList');
-            contasList.innerHTML = '';
+            const extrasList = document.getElementById('extrasList');
+            extrasList.innerHTML = '';
             let total = 0;
             let hasEntries = false;
 
@@ -529,20 +604,17 @@
                 let dayEvents = allEvents[dateStr] || [];
 
                 dayEvents.forEach(ev => {
-                    // Verifica se o campo "valor" existe e tem algo escrito
                     if (ev.value && ev.value.trim() !== "") {
-                        // Limpa o texto, mantendo apenas números, pontos ou vírgulas, converte vírgula para ponto
                         let cleanValue = ev.value.replace(',', '.').replace(/[^0-9.-]+/g, "");
                         let numValue = parseFloat(cleanValue);
                         
                         if (!isNaN(numValue)) {
                             hasEntries = true;
                             total += numValue;
-                            
-                            contasList.innerHTML += `
-                                <div class="contas-item" style="border-left: 5px solid ${ev.color};">
-                                    <div class="contas-desc">Dia ${i} - ${ev.type}</div>
-                                    <div class="contas-val">${numValue.toFixed(2)} €</div>
+                            extrasList.innerHTML += `
+                                <div class="extras-item" style="border-left: 5px solid ${ev.color};">
+                                    <div class="extras-desc">Dia ${i} - ${ev.type}</div>
+                                    <div class="extras-val">${numValue.toFixed(2)} €</div>
                                 </div>
                             `;
                         }
@@ -551,10 +623,116 @@
             }
 
             if (!hasEntries) {
-                contasList.innerHTML = '<p style="text-align: center; color: var(--text-color); margin-top: 30px;">Não tens valores extra registados neste mês.</p>';
+                extrasList.innerHTML = '<p style="text-align: center; color: var(--text-color); margin-top: 30px;">Não tens extras registados neste mês.</p>';
             }
+            document.getElementById('extrasTotal').innerText = `Total: ${total.toFixed(2)} €`;
+        }
 
-            document.getElementById('contasTotal').innerText = `Total: ${total.toFixed(2)} €`;
+        /* NOVA LÓGICA DA ABA CONTAS (RECEITAS E DESPESAS) */
+        function toggleFinInput(rowId) {
+            const row = document.getElementById(rowId);
+            // Mostra ou esconde a linha de inserção (caixas de texto)
+            if (row.style.display === 'none' || row.style.display === '') {
+                row.style.display = 'flex';
+            } else {
+                row.style.display = 'none';
+            }
+        }
+
+        function getMonthKey() {
+            return currentDate.getFullYear() + "-" + String(currentDate.getMonth() + 1).padStart(2, '0');
+        }
+
+        function renderFinancas() {
+            const month = currentDate.getMonth();
+            document.getElementById('financasMonthDisplay').innerText = `Contas de ${monthNames[month]}`;
+            
+            let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
+            let f = todasFinancas[getMonthKey()] || { receita: 0, despesas: [], outros: [] };
+
+            // Receita
+            document.getElementById('receitaDisplay').innerText = parseFloat(f.receita).toFixed(2) + ' €';
+
+            // Despesas Fixas
+            let despList = document.getElementById('despesasList');
+            despList.innerHTML = '';
+            let despTotal = 0;
+            f.despesas.forEach((item, index) => {
+                despTotal += item.val;
+                despList.innerHTML += `
+                    <div class="financa-item">
+                        <div class="financa-item-desc">${item.desc}</div>
+                        <div class="financa-item-val">${item.val.toFixed(2)} €</div>
+                        <button class="btn-del-fin" onclick="delFinancaItem('despesas', ${index})">🗑️</button>
+                    </div>`;
+            });
+            document.getElementById('despesasTotal').innerText = despTotal.toFixed(2) + ' €';
+
+            // Outros Gastos
+            let outrosList = document.getElementById('outrosList');
+            outrosList.innerHTML = '';
+            let outrosTotal = 0;
+            f.outros.forEach((item, index) => {
+                outrosTotal += item.val;
+                outrosList.innerHTML += `
+                    <div class="financa-item">
+                        <div class="financa-item-desc">${item.desc}</div>
+                        <div class="financa-item-val">${item.val.toFixed(2)} €</div>
+                        <button class="btn-del-fin" onclick="delFinancaItem('outros', ${index})">🗑️</button>
+                    </div>`;
+            });
+            document.getElementById('outrosTotal').innerText = outrosTotal.toFixed(2) + ' €';
+        }
+
+        function saveReceita() {
+            const inputVal = document.getElementById('receitaValInput').value;
+            const val = parseFloat(inputVal.replace(',', '.'));
+
+            if (!isNaN(val)) {
+                let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
+                const mk = getMonthKey();
+                if (!todasFinancas[mk]) todasFinancas[mk] = { receita: 0, despesas: [], outros: [] };
+                
+                todasFinancas[mk].receita = val;
+                localStorage.setItem('agendaFinancas', JSON.stringify(todasFinancas));
+                
+                document.getElementById('receitaValInput').value = '';
+                document.getElementById('receitaInputRow').style.display = 'none'; // Esconde logo a caixa
+                renderFinancas();
+            }
+        }
+
+        function saveFinancaItem(tipo) {
+            const descId = tipo === 'despesas' ? 'despesasDescInput' : 'outrosDescInput';
+            const valId = tipo === 'despesas' ? 'despesasValInput' : 'outrosValInput';
+            const rowId = tipo === 'despesas' ? 'despesasInputRow' : 'outrosInputRow';
+
+            const desc = document.getElementById(descId).value;
+            const val = parseFloat(document.getElementById(valId).value.replace(',', '.'));
+
+            if (desc.trim() !== '' && !isNaN(val)) {
+                let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
+                const mk = getMonthKey();
+                if (!todasFinancas[mk]) todasFinancas[mk] = { receita: 0, despesas: [], outros: [] };
+                
+                todasFinancas[mk][tipo].push({ desc: desc, val: val });
+                localStorage.setItem('agendaFinancas', JSON.stringify(todasFinancas));
+
+                document.getElementById(descId).value = '';
+                document.getElementById(valId).value = '';
+                document.getElementById(rowId).style.display = 'none'; // Esconde logo as caixas
+                renderFinancas();
+            }
+        }
+
+        function delFinancaItem(tipo, index) {
+            if (confirm('Eliminar este gasto?')) {
+                let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
+                const mk = getMonthKey();
+                todasFinancas[mk][tipo].splice(index, 1);
+                localStorage.setItem('agendaFinancas', JSON.stringify(todasFinancas));
+                renderFinancas();
+            }
         }
 
         renderCalendar(); 
