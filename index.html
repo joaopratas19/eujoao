@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Agenda iOS Style</title>
     <style>
-        /* PALETA DE CORES DE ALTO CONTRASTE (INTACTA) */
+        /* PALETA DE CORES DE ALTO CONTRASTE */
         :root {
             --app-bg: #0F172A; 
             --bg-color: #1E293B; 
@@ -294,7 +294,23 @@
         .btn-del-fin { background: none; border: none; color: var(--primary-color); font-size: 1rem; margin-left: 10px; cursor: pointer;}
         .financa-total { text-align: right; font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-top: 10px; }
 
-        h2 { color: var(--primary-color); margin-bottom: 15px; } 
+        /* Estilos do Modal Unificado (Inserir + Modelos) */
+        #insertModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 1001; align-items: center; justify-content: center;
+        }
+        .modal-content {
+            background: var(--bg-color); width: 90%; border-radius: 12px; padding: 20px; 
+            max-height: 85vh; overflow-y: auto; color: var(--text-color);
+        }
+        .template-btn {
+            text-align: left; padding: 15px;
+            background: var(--secondary-bg); border-radius: 8px; font-size: 1rem;
+            border-left: 5px solid; cursor: pointer; color: var(--text-color);
+            border-top: none; border-right: none; border-bottom: none;
+        }
+
+        h2, h3 { color: var(--primary-color); margin-bottom: 15px; } 
         label { display: block; margin-bottom: 5px; color: var(--text-color); font-size: 0.9rem; font-weight: bold;}
         input[type="text"], input[type="date"], input[type="number"], textarea, select {
             width: 100%; padding: 12px; margin-bottom: 15px;
@@ -309,21 +325,6 @@
         button.btn-submit {
             width: 100%; padding: 15px; background-color: var(--primary-color);
             color: #000000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
-        }
-
-        #templatesModal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 1001; align-items: center; justify-content: center;
-        }
-        .modal-content {
-            background: var(--bg-color); width: 85%; border-radius: 12px; padding: 20px; max-height: 80vh; overflow-y: auto;
-            color: var(--text-color);
-        }
-        .template-btn {
-            width: 100%; text-align: left; padding: 15px; margin-bottom: 10px;
-            background: var(--secondary-bg); border-radius: 8px; font-size: 1rem;
-            border-left: 5px solid; cursor: pointer; color: var(--text-color);
-            border-top: none; border-right: none; border-bottom: none;
         }
     </style>
 </head>
@@ -350,8 +351,8 @@
             <li><a href="#" onclick="switchTab('yearly', this)">Vista Anual</a></li>
             <li><a href="#" onclick="switchTab('contas', this)">Contas</a></li> 
             <li><a href="#" onclick="switchTab('extras', this)">Extras</a></li> 
-            <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
-            <li style="margin-top: 40px;"><a href="#" onclick="switchTab('backup', this)">Backup / Restauro</a></li> </ul>
+            <li style="margin-top: 40px;"><a href="#" onclick="switchTab('backup', this)">Backup / Restauro</a></li> 
+        </ul>
     </nav>
 
     <main>
@@ -441,13 +442,40 @@
                     <button class="btn-back" onclick="switchTab('home')">❮</button>
                     <h2 id="dailyDateDisplay" style="font-size: 1.2rem;"></h2>
                 </div>
-                <button class="btn-add-quick" onclick="openTemplatesModal()">+</button>
+                <button class="btn-add-quick" onclick="openInsertModal()">+</button>
             </div>
             <div id="dailyEventsList"></div>
         </section>
 
-        <section id="tab-insert" class="tab-content">
-            <h2>Novo Registo</h2>
+        <section id="tab-backup" class="tab-content">
+            <h2 style="text-align: center; margin-bottom: 20px;">Backup e Restauro</h2>
+            
+            <div class="financa-card">
+                <h3 style="margin-bottom: 10px;">Guardar Dados</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8;">
+                    Descarrega um ficheiro com todos os teus eventos, contas, extras e modelos.
+                </p>
+                <button class="btn-submit" onclick="exportData()">⬇️ Exportar Backup</button>
+            </div>
+
+            <div class="financa-card">
+                <h3 style="margin-bottom: 10px;">Recuperar Dados</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8;">
+                    Carrega um ficheiro de backup para restaurar a tua agenda.
+                </p>
+                <input type="file" id="importFile" accept=".json" style="margin-bottom: 10px; background: none; border: 1px solid var(--secondary-bg); padding: 5px; width: 100%;">
+                <button class="btn-submit" style="background-color: var(--secondary-bg); color: var(--text-color);" onclick="importData()">⬆️ Importar Backup</button>
+            </div>
+        </section>
+    </main>
+
+    <div id="insertModal" onclick="closeInsertModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            
+            <h3 style="border-bottom: 1px solid var(--secondary-bg); padding-bottom: 10px;">Eventos Guardados</h3>
+            <div id="templatesList" style="margin-bottom: 30px;"></div>
+            
+            <h3 style="border-bottom: 1px solid var(--secondary-bg); padding-bottom: 10px;">Novo Registo</h3>
             <form id="insertForm">
                 <label>Data</label>
                 <input type="date" id="eventDate" required>
@@ -455,14 +483,9 @@
                 <label>Cor do Evento</label>
                 <input type="color" id="eventColor" value="#000000" required>
 
-                <label>Tipo (Ex: Reunião, Part-time, OUTROS)</label>
+                <label>Tipo (Ex: Reunião, OUTROS)</label>
                 <input type="text" id="eventType" required>
                 
-                <div id="partTimeRow" style="display: none; gap: 10px; margin-bottom: 15px;">
-                    <input type="number" id="ptHoras" placeholder="Horas feitas" style="margin-bottom: 0;">
-                    <input type="number" id="ptValorHora" placeholder="Valor/Hora (€)" style="margin-bottom: 0;">
-                </div>
-
                 <textarea id="eventNotes" rows="3" placeholder="Escreve os detalhes aqui..." style="display:none;"></textarea>
 
                 <label>Valor / Extra (Opcional)</label>
@@ -473,37 +496,10 @@
                     <label for="saveAsTemplate" style="margin:0;">Guardar esta seleção (Modelo)</label>
                 </div>
 
-                <button type="submit" class="btn-submit">Guardar</button>
+                <button type="submit" class="btn-submit" style="margin-bottom: 10px;">Guardar Novo Registo</button>
             </form>
-        </section>
 
-        <section id="tab-backup" class="tab-content">
-            <h2 style="text-align: center; margin-bottom: 20px;">Backup e Restauro</h2>
-            
-            <div class="financa-card">
-                <h3 style="margin-bottom: 10px;">Guardar Dados</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8;">
-                    Descarrega um ficheiro com todos os teus eventos, contas, extras e modelos de forma totalmente segura e privada.
-                </p>
-                <button class="btn-submit" onclick="exportData()">⬇️ Exportar Backup</button>
-            </div>
-
-            <div class="financa-card">
-                <h3 style="margin-bottom: 10px;">Recuperar Dados</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8;">
-                    Carrega um ficheiro de backup para restaurar a tua agenda num novo telemóvel. (Atenção: substitui os dados atuais!)
-                </p>
-                <input type="file" id="importFile" accept=".json" style="margin-bottom: 10px; background: none; border: 1px solid var(--secondary-bg); padding: 5px; width: 100%;">
-                <button class="btn-submit" style="background-color: var(--secondary-bg); color: var(--text-color);" onclick="importData()">⬆️ Importar Backup</button>
-            </div>
-        </section>
-    </main>
-
-    <div id="templatesModal" onclick="closeTemplatesModal(event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 style="margin-bottom: 15px; color: var(--primary-color);">Eventos</h3>
-            <div id="templatesList"></div>
-            <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: var(--text-color); font-weight: bold; cursor: pointer;">Cancelar</button>
+            <button onclick="closeInsertModal()" style="width: 100%; padding: 15px; background: none; border: 1px solid var(--secondary-bg); border-radius: 8px; color: var(--text-color); font-weight: bold; cursor: pointer;">Cancelar / Fechar</button>
         </div>
     </div>
 
@@ -625,7 +621,6 @@
             }
         }
 
-        // Função utilitária para calcular o Total dos Extras num dado mês (usada na aba Extras e no Dashboard)
         function getExtrasTotalForMonth(year, month) {
             let total = 0;
             let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
@@ -708,10 +703,8 @@
             let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
             let f = todasFinancas[getMonthKey()] || { receita: 0, despesas: [], outros: [] };
 
-            // Receita
             document.getElementById('receitaDisplay').innerText = parseFloat(f.receita).toFixed(2) + ' €';
 
-            // Despesas Fixas
             let despList = document.getElementById('despesasList');
             despList.innerHTML = '';
             let despTotal = 0;
@@ -726,7 +719,6 @@
             });
             document.getElementById('despesasTotal').innerText = despTotal.toFixed(2) + ' €';
 
-            // Outros Gastos
             let outrosList = document.getElementById('outrosList');
             outrosList.innerHTML = '';
             let outrosTotal = 0;
@@ -741,7 +733,6 @@
             });
             document.getElementById('outrosTotal').innerText = outrosTotal.toFixed(2) + ' €';
 
-            // DASHBOARD: Saldo Global = Receita + Extras - Despesas - Outros
             let extrasTotal = getExtrasTotalForMonth(year, month);
             let saldoReal = parseFloat(f.receita) + extrasTotal - despTotal - outrosTotal;
             document.getElementById('saldoGlobalTotal').innerText = saldoReal.toFixed(2) + ' €';
@@ -765,7 +756,6 @@
             }
         }
 
-        // Função para apagar a receita (Coloca a 0)
         function delReceita() {
             if (confirm('Tens a certeza que queres apagar o valor da receita mensal?')) {
                 let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
@@ -811,46 +801,17 @@
             }
         }
 
-        // LÓGICA DE INSERÇÃO & CALCULADORA PART-TIME
+        /* LÓGICA DO MODAL UNIFICADO (Inserir + Modelos) */
         const typeInput = document.getElementById('eventType');
         const notesInput = document.getElementById('eventNotes');
-        const ptRow = document.getElementById('partTimeRow');
-        const ptHoras = document.getElementById('ptHoras');
-        const ptValorHora = document.getElementById('ptValorHora');
-        const valInput = document.getElementById('eventValue');
 
         typeInput.addEventListener('input', function() {
-            const valFormated = this.value.trim().toUpperCase();
-            
-            // Caixa de OUTROS
-            if (valFormated === 'OUTROS') {
+            if (this.value.trim().toUpperCase() === 'OUTROS') {
                 notesInput.style.display = 'block'; notesInput.required = true;
             } else {
                 notesInput.style.display = 'none'; notesInput.required = false; notesInput.value = '';
             }
-
-            // Calculadora Part-time
-            if (valFormated.includes('PART-TIME') || valFormated.includes('PART TIME') || valFormated.includes('PARTTIME')) {
-                ptRow.style.display = 'flex';
-            } else {
-                ptRow.style.display = 'none';
-                ptHoras.value = '';
-                ptValorHora.value = '';
-            }
         });
-
-        function calcPartTime() {
-            const h = parseFloat(ptHoras.value.replace(',', '.')) || 0;
-            const vh = parseFloat(ptValorHora.value.replace(',', '.')) || 0;
-            if (h > 0 && vh > 0) {
-                valInput.value = (h * vh).toFixed(2);
-            } else {
-                valInput.value = '';
-            }
-        }
-
-        ptHoras.addEventListener('input', calcPartTime);
-        ptValorHora.addEventListener('input', calcPartTime);
 
         document.getElementById('insertForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -876,12 +837,17 @@
 
             this.reset();
             notesInput.style.display = 'none';
-            ptRow.style.display = 'none';
             document.getElementById('saveAsTemplate').checked = false;
-            switchTab('home');
+            
+            closeInsertModal();
+            
+            if (date === currentDailyDateStr) {
+                renderDailyEvents();
+            }
+            renderCalendar(); 
         });
 
-        // VISTA DIÁRIA
+        // LÓGICA DE EVENTOS GUARDADOS (MODELOS) E VISTA DIÁRIA
         function openDailyView(dateStr, day, monthName, year) {
             currentDailyDateStr = dateStr;
             const dateObj = new Date(dateStr);
@@ -891,7 +857,6 @@
             document.getElementById('dailyDateDisplay').innerText = `${weekDayName}, ${day} de ${monthName}`;
             
             renderDailyEvents();
-            document.getElementById('eventDate').value = dateStr;
             switchTab('daily');
         }
 
@@ -931,32 +896,68 @@
                 
                 localStorage.setItem('agendaEvents', JSON.stringify(allEvents));
                 renderDailyEvents(); 
+                renderCalendar();
             }
         }
 
-        function openTemplatesModal() {
+        // ABRIR O NOVO MODAL UNIFICADO
+        function openInsertModal() {
+            document.getElementById('eventDate').value = currentDailyDateStr;
+            renderTemplatesList();
+            document.getElementById('insertModal').style.display = 'flex';
+        }
+
+        function closeInsertModal(e) {
+            if (!e || e.target.id === 'insertModal') {
+                document.getElementById('insertModal').style.display = 'none';
+            }
+        }
+
+        function renderTemplatesList() {
             const templatesList = document.getElementById('templatesList');
             let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
             
             templatesList.innerHTML = '';
             if(templates.length === 0) {
-                templatesList.innerHTML = '<p style="color: var(--text-color); text-align:center;">Ainda não guardaste nenhum evento.</p>';
+                templatesList.innerHTML = '<p style="color: var(--text-color); font-size: 0.9rem;">Não tens eventos guardados.</p>';
             } else {
-                templates.forEach(t => {
+                templates.forEach((t, index) => {
+                    const row = document.createElement('div');
+                    row.style.display = 'flex';
+                    row.style.gap = '10px';
+                    row.style.marginBottom = '10px';
+                    
                     const btn = document.createElement('button');
                     btn.className = 'template-btn';
                     btn.style.borderLeftColor = t.color;
+                    btn.style.margin = '0';
+                    btn.style.flex = '1';
                     btn.innerHTML = `<strong>${t.type}</strong> ${t.value ? '- ' + t.value : ''}`;
                     btn.onclick = () => addFromTemplate(t);
-                    templatesList.appendChild(btn);
+                    
+                    // BOTÃO DE APAGAR O MODELO
+                    const delBtn = document.createElement('button');
+                    delBtn.innerHTML = '🗑️';
+                    delBtn.style.background = 'none';
+                    delBtn.style.border = 'none';
+                    delBtn.style.fontSize = '1.3rem';
+                    delBtn.style.cursor = 'pointer';
+                    delBtn.style.color = 'var(--primary-color)';
+                    delBtn.onclick = () => deleteTemplate(index);
+
+                    row.appendChild(btn);
+                    row.appendChild(delBtn);
+                    templatesList.appendChild(row);
                 });
             }
-            document.getElementById('templatesModal').style.display = 'flex';
         }
 
-        function closeTemplatesModal(e) {
-            if (!e || e.target.id === 'templatesModal') {
-                document.getElementById('templatesModal').style.display = 'none';
+        function deleteTemplate(index) {
+            if(confirm("Tens a certeza que queres apagar este evento dos guardados?")) {
+                let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
+                templates.splice(index, 1);
+                localStorage.setItem('agendaTemplates', JSON.stringify(templates));
+                renderTemplatesList(); // Atualiza a lista dentro do modal
             }
         }
 
@@ -973,10 +974,11 @@
             
             localStorage.setItem('agendaEvents', JSON.stringify(events));
             renderDailyEvents();
-            closeTemplatesModal();
+            renderCalendar();
+            closeInsertModal();
         }
 
-        // BACKUP & RESTAURO LÓGICA
+        // LÓGICA DE BACKUP & RESTAURO
         function exportData() {
             const data = {
                 events: JSON.parse(localStorage.getItem('agendaEvents') || '{}'),
@@ -1011,7 +1013,7 @@
                         if(data.financas) localStorage.setItem('agendaFinancas', JSON.stringify(data.financas));
                         
                         alert('Backup restaurado com sucesso!');
-                        location.reload(); // Recarrega a página para atualizar os dados visuais
+                        location.reload(); 
                     } catch(err) {
                         alert('Erro! O ficheiro selecionado não é um backup válido da Agenda.');
                     }
