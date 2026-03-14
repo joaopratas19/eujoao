@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Agenda iOS Style</title>
     <style>
-        /* PALETA DE CORES COM ALTO CONTRASTE (INTACTA) */
+        /* PALETA DE CORES DE ALTO CONTRASTE (INTACTA) */
         :root {
             --app-bg: #0F172A; 
             --bg-color: #1E293B; 
@@ -98,6 +98,7 @@
             z-index: 999;
             padding: 20px;
             box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+            overflow-y: auto;
         }
 
         nav.open { left: 0; }
@@ -229,7 +230,6 @@
             font-size: 1.2rem; cursor: pointer; padding: 10px;
         }
 
-        /* Aba de Extras (Antiga Aba Contas) */
         .extras-item {
             background-color: var(--bg-color);
             padding: 15px;
@@ -253,7 +253,6 @@
             color: var(--text-color);
         }
 
-        /* NOVA ABA DE CONTAS (RECEITAS E DESPESAS) */
         .financa-card {
             background-color: var(--bg-color);
             border-radius: 10px;
@@ -273,7 +272,7 @@
             cursor: pointer; line-height: 1; font-weight: 300; padding: 0 10px;
         }
         .financa-input-row {
-            display: none; /* ESCONDIDO POR DEFEITO */
+            display: none; 
             gap: 10px;
             margin-bottom: 15px;
         }
@@ -295,7 +294,6 @@
         .btn-del-fin { background: none; border: none; color: var(--primary-color); font-size: 1rem; margin-left: 10px; cursor: pointer;}
         .financa-total { text-align: right; font-weight: bold; font-size: 1.2rem; color: var(--primary-color); margin-top: 10px; }
 
-        /* Formulários Opacos */
         h2 { color: var(--primary-color); margin-bottom: 15px; } 
         label { display: block; margin-bottom: 5px; color: var(--text-color); font-size: 0.9rem; font-weight: bold;}
         input[type="text"], input[type="date"], input[type="number"], textarea, select {
@@ -310,7 +308,7 @@
         .checkbox-group label { color: var(--text-color); }
         button.btn-submit {
             width: 100%; padding: 15px; background-color: var(--primary-color);
-            color: #000000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
+            color: #000000; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
         }
 
         #templatesModal {
@@ -350,8 +348,10 @@
         <ul>
             <li><a href="#" class="active" onclick="switchTab('home', this)">Vista Mensal</a></li>
             <li><a href="#" onclick="switchTab('yearly', this)">Vista Anual</a></li>
-            <li><a href="#" onclick="switchTab('contas', this)">Contas</a></li> <li><a href="#" onclick="switchTab('extras', this)">Extras</a></li> <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
-        </ul>
+            <li><a href="#" onclick="switchTab('contas', this)">Contas</a></li> 
+            <li><a href="#" onclick="switchTab('extras', this)">Extras</a></li> 
+            <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
+            <li style="margin-top: 40px;"><a href="#" onclick="switchTab('backup', this)">Backup / Restauro</a></li> </ul>
     </nav>
 
     <main>
@@ -373,6 +373,15 @@
                 <h2 id="financasMonthDisplay" style="font-size: 1.3rem;">Contas</h2>
             </div>
 
+            <div class="financa-card" style="border-left: 5px solid var(--primary-color);">
+                <div class="financa-header">
+                    <h3 style="font-size: 1.2rem;">Saldo do Mês (O que sobra)</h3>
+                </div>
+                <div id="saldoGlobalTotal" style="font-size: 2rem; font-weight: bold; text-align: right; color: var(--primary-color);">
+                    0.00 €
+                </div>
+            </div>
+
             <div class="financa-card">
                 <div class="financa-header">
                     <h3>Receita</h3>
@@ -382,7 +391,11 @@
                     <input type="number" id="receitaValInput" placeholder="Valor €" style="flex: 1;">
                     <button onclick="saveReceita()">✔</button>
                 </div>
-                <div id="receitaDisplay" class="financa-total" style="font-size: 1.5rem;">0.00 €</div>
+                <div class="financa-item" style="border-bottom: none;">
+                    <div class="financa-item-desc">Valor Base</div>
+                    <div class="financa-item-val" id="receitaDisplay" style="font-size: 1.2rem;">0.00 €</div>
+                    <button class="btn-del-fin" onclick="delReceita()">🗑️</button>
+                </div>
             </div>
 
             <div class="financa-card">
@@ -442,8 +455,14 @@
                 <label>Cor do Evento</label>
                 <input type="color" id="eventColor" value="#000000" required>
 
-                <label>Tipo (Ex: Reunião, OUTROS)</label>
+                <label>Tipo (Ex: Reunião, Part-time, OUTROS)</label>
                 <input type="text" id="eventType" required>
+                
+                <div id="partTimeRow" style="display: none; gap: 10px; margin-bottom: 15px;">
+                    <input type="number" id="ptHoras" placeholder="Horas feitas" style="margin-bottom: 0;">
+                    <input type="number" id="ptValorHora" placeholder="Valor/Hora (€)" style="margin-bottom: 0;">
+                </div>
+
                 <textarea id="eventNotes" rows="3" placeholder="Escreve os detalhes aqui..." style="display:none;"></textarea>
 
                 <label>Valor / Extra (Opcional)</label>
@@ -456,6 +475,27 @@
 
                 <button type="submit" class="btn-submit">Guardar</button>
             </form>
+        </section>
+
+        <section id="tab-backup" class="tab-content">
+            <h2 style="text-align: center; margin-bottom: 20px;">Backup e Restauro</h2>
+            
+            <div class="financa-card">
+                <h3 style="margin-bottom: 10px;">Guardar Dados</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8;">
+                    Descarrega um ficheiro com todos os teus eventos, contas, extras e modelos de forma totalmente segura e privada.
+                </p>
+                <button class="btn-submit" onclick="exportData()">⬇️ Exportar Backup</button>
+            </div>
+
+            <div class="financa-card">
+                <h3 style="margin-bottom: 10px;">Recuperar Dados</h3>
+                <p style="font-size: 0.9rem; margin-bottom: 15px; opacity: 0.8;">
+                    Carrega um ficheiro de backup para restaurar a tua agenda num novo telemóvel. (Atenção: substitui os dados atuais!)
+                </p>
+                <input type="file" id="importFile" accept=".json" style="margin-bottom: 10px; background: none; border: 1px solid var(--secondary-bg); padding: 5px; width: 100%;">
+                <button class="btn-submit" style="background-color: var(--secondary-bg); color: var(--text-color);" onclick="importData()">⬆️ Importar Backup</button>
+            </div>
         </section>
     </main>
 
@@ -501,7 +541,7 @@
             if (tabName === 'home') renderCalendar();
             if (tabName === 'yearly') renderYearly();
             if (tabName === 'extras') renderExtras(); 
-            if (tabName === 'contas') renderFinancas(); // NOVA ABA CONTAS
+            if (tabName === 'contas') renderFinancas(); 
         }
 
         function changeMonth(direction) {
@@ -585,7 +625,26 @@
             }
         }
 
-        /* LÓGICA DA ABA EXTRAS (A ANTIGA ABA CONTAS) */
+        // Função utilitária para calcular o Total dos Extras num dado mês (usada na aba Extras e no Dashboard)
+        function getExtrasTotalForMonth(year, month) {
+            let total = 0;
+            let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                let dayEvents = allEvents[dateStr] || [];
+                dayEvents.forEach(ev => {
+                    if (ev.value && ev.value.trim() !== "") {
+                        let cleanValue = ev.value.replace(',', '.').replace(/[^0-9.-]+/g, "");
+                        let numValue = parseFloat(cleanValue);
+                        if (!isNaN(numValue)) total += numValue;
+                    }
+                });
+            }
+            return total;
+        }
+
         function renderExtras() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
@@ -628,10 +687,8 @@
             document.getElementById('extrasTotal').innerText = `Total: ${total.toFixed(2)} €`;
         }
 
-        /* NOVA LÓGICA DA ABA CONTAS (RECEITAS E DESPESAS) */
         function toggleFinInput(rowId) {
             const row = document.getElementById(rowId);
-            // Mostra ou esconde a linha de inserção (caixas de texto)
             if (row.style.display === 'none' || row.style.display === '') {
                 row.style.display = 'flex';
             } else {
@@ -644,6 +701,7 @@
         }
 
         function renderFinancas() {
+            const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             document.getElementById('financasMonthDisplay').innerText = `Contas de ${monthNames[month]}`;
             
@@ -682,6 +740,11 @@
                     </div>`;
             });
             document.getElementById('outrosTotal').innerText = outrosTotal.toFixed(2) + ' €';
+
+            // DASHBOARD: Saldo Global = Receita + Extras - Despesas - Outros
+            let extrasTotal = getExtrasTotalForMonth(year, month);
+            let saldoReal = parseFloat(f.receita) + extrasTotal - despTotal - outrosTotal;
+            document.getElementById('saldoGlobalTotal').innerText = saldoReal.toFixed(2) + ' €';
         }
 
         function saveReceita() {
@@ -697,7 +760,20 @@
                 localStorage.setItem('agendaFinancas', JSON.stringify(todasFinancas));
                 
                 document.getElementById('receitaValInput').value = '';
-                document.getElementById('receitaInputRow').style.display = 'none'; // Esconde logo a caixa
+                document.getElementById('receitaInputRow').style.display = 'none'; 
+                renderFinancas();
+            }
+        }
+
+        // Função para apagar a receita (Coloca a 0)
+        function delReceita() {
+            if (confirm('Tens a certeza que queres apagar o valor da receita mensal?')) {
+                let todasFinancas = JSON.parse(localStorage.getItem('agendaFinancas')) || {};
+                const mk = getMonthKey();
+                if (!todasFinancas[mk]) todasFinancas[mk] = { receita: 0, despesas: [], outros: [] };
+                
+                todasFinancas[mk].receita = 0;
+                localStorage.setItem('agendaFinancas', JSON.stringify(todasFinancas));
                 renderFinancas();
             }
         }
@@ -720,7 +796,7 @@
 
                 document.getElementById(descId).value = '';
                 document.getElementById(valId).value = '';
-                document.getElementById(rowId).style.display = 'none'; // Esconde logo as caixas
+                document.getElementById(rowId).style.display = 'none'; 
                 renderFinancas();
             }
         }
@@ -735,18 +811,46 @@
             }
         }
 
-        renderCalendar(); 
-
+        // LÓGICA DE INSERÇÃO & CALCULADORA PART-TIME
         const typeInput = document.getElementById('eventType');
         const notesInput = document.getElementById('eventNotes');
+        const ptRow = document.getElementById('partTimeRow');
+        const ptHoras = document.getElementById('ptHoras');
+        const ptValorHora = document.getElementById('ptValorHora');
+        const valInput = document.getElementById('eventValue');
 
         typeInput.addEventListener('input', function() {
-            if (this.value.trim().toUpperCase() === 'OUTROS') {
+            const valFormated = this.value.trim().toUpperCase();
+            
+            // Caixa de OUTROS
+            if (valFormated === 'OUTROS') {
                 notesInput.style.display = 'block'; notesInput.required = true;
             } else {
                 notesInput.style.display = 'none'; notesInput.required = false; notesInput.value = '';
             }
+
+            // Calculadora Part-time
+            if (valFormated.includes('PART-TIME') || valFormated.includes('PART TIME') || valFormated.includes('PARTTIME')) {
+                ptRow.style.display = 'flex';
+            } else {
+                ptRow.style.display = 'none';
+                ptHoras.value = '';
+                ptValorHora.value = '';
+            }
         });
+
+        function calcPartTime() {
+            const h = parseFloat(ptHoras.value.replace(',', '.')) || 0;
+            const vh = parseFloat(ptValorHora.value.replace(',', '.')) || 0;
+            if (h > 0 && vh > 0) {
+                valInput.value = (h * vh).toFixed(2);
+            } else {
+                valInput.value = '';
+            }
+        }
+
+        ptHoras.addEventListener('input', calcPartTime);
+        ptValorHora.addEventListener('input', calcPartTime);
 
         document.getElementById('insertForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -772,10 +876,12 @@
 
             this.reset();
             notesInput.style.display = 'none';
+            ptRow.style.display = 'none';
             document.getElementById('saveAsTemplate').checked = false;
             switchTab('home');
         });
 
+        // VISTA DIÁRIA
         function openDailyView(dateStr, day, monthName, year) {
             currentDailyDateStr = dateStr;
             const dateObj = new Date(dateStr);
@@ -805,7 +911,7 @@
                             <div class="event-info">
                                 <div class="event-title">${ev.type}</div>
                     `;
-                    if (ev.value) eventHTML += `<div style="color: var(--text-color); font-size: 0.9rem;">${ev.value}</div>`;
+                    if (ev.value) eventHTML += `<div style="color: var(--text-color); font-size: 0.9rem;">${ev.value} €</div>`;
                     if (ev.notes) eventHTML += `<div style="color: var(--text-color); font-style: italic; font-size: 0.9rem;">"${ev.notes}"</div>`;
                     
                     eventHTML += `</div>
@@ -868,6 +974,50 @@
             localStorage.setItem('agendaEvents', JSON.stringify(events));
             renderDailyEvents();
             closeTemplatesModal();
+        }
+
+        // BACKUP & RESTAURO LÓGICA
+        function exportData() {
+            const data = {
+                events: JSON.parse(localStorage.getItem('agendaEvents') || '{}'),
+                templates: JSON.parse(localStorage.getItem('agendaTemplates') || '[]'),
+                financas: JSON.parse(localStorage.getItem('agendaFinancas') || '{}')
+            };
+            
+            const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `agenda_backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importData() {
+            const fileInput = document.getElementById('importFile');
+            if (fileInput.files.length === 0) {
+                alert('Por favor, seleciona o ficheiro de backup (.json) primeiro.');
+                return;
+            }
+
+            if(confirm('Atenção: Carregar um backup vai substituir todas as contas e eventos que tens atualmente na aplicação. Queres continuar?')) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if(data.events) localStorage.setItem('agendaEvents', JSON.stringify(data.events));
+                        if(data.templates) localStorage.setItem('agendaTemplates', JSON.stringify(data.templates));
+                        if(data.financas) localStorage.setItem('agendaFinancas', JSON.stringify(data.financas));
+                        
+                        alert('Backup restaurado com sucesso!');
+                        location.reload(); // Recarrega a página para atualizar os dados visuais
+                    } catch(err) {
+                        alert('Erro! O ficheiro selecionado não é um backup válido da Agenda.');
+                    }
+                };
+                reader.readAsText(file);
+            }
         }
 
         document.getElementById('eventDate').valueAsDate = new Date();
