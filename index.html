@@ -1,43 +1,37 @@
-           <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Minha Agenda Premium</title>
+    <title>Agenda iOS Style</title>
     <style>
-        /* Variáveis de Cores (Estilo Dark Modo com tons Pastéis/Creme) */
+        /* Variáveis de Cores - Estilo iOS mas com Fundo Creme */
         :root {
-            --bg-color: #1a1a1d; /* Fundo escuro como na imagem */
-            --text-color: #fdfcf7; /* Texto claro, tom de creme suave */
-            --primary-color: #4A90E2; /* Azul para destaques */
-            --nav-bg: #212124; /* Fundo do cabeçalho e menu */
-            --border-color: #3a3a3d; /* Cor das bordas finas */
-            
-            /* Cores padrão para o seletor livre (caso queiras cores padrão depois) */
-            --color-1: #f9e8a5; /* Amarelo Pastel */
-            --color-2: #a3cff8; /* Azul Pastel */
-            --color-3: #b0edcd; /* Verde Pastel */
-            --color-4: #f8bed2; /* Rosa Pastel */
-            --color-5: #cab8ed; /* Roxo Pastel */
+            --bg-color: #F9F8F4; /* Fundo creme suave */
+            --text-color: #000000;
+            --primary-color: #FF3B30; /* Vermelho iOS para destaques */
+            --nav-bg: #F4F3EF;
+            --border-color: #E5E5EA;
+            --gray-text: #8E8E93;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
-            padding-top: 60px; /* Espaço para o cabeçalho fixo */
+            padding-top: 60px;
             overflow-x: hidden;
         }
 
         /* Cabeçalho Fixo */
         header {
-            background-color: var(--nav-bg);
+            background-color: var(--bg-color);
             padding: 10px 15px;
             display: flex;
             justify-content: space-between;
@@ -50,31 +44,40 @@
             z-index: 1000;
         }
 
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         #monthYearDisplay {
-            font-size: 1.1rem;
-            font-weight: bold;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
         }
 
-        #clock {
-            font-size: 0.8rem;
-            opacity: 0.8;
+        .nav-arrow {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0 10px;
         }
 
-        /* Ícone de Menu Hambúrguer (3 traços) */
         .hamburger-btn {
             background: none;
             border: none;
-            color: var(--text-color);
+            color: var(--primary-color);
             font-size: 1.5rem;
             cursor: pointer;
-            padding: 5px;
         }
 
         /* Menu de Navegação Hambúrguer */
         nav {
             position: fixed;
-            top: 60px; /* Logo abaixo do cabeçalho */
-            left: -100%; /* Oculto à esquerda */
+            top: 60px;
+            left: -100%;
             width: 70%;
             height: calc(100% - 60px);
             background-color: var(--nav-bg);
@@ -82,215 +85,154 @@
             transition: left 0.3s ease;
             z-index: 999;
             padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
         }
 
-        nav.open {
-            left: 0;
-        }
+        nav.open { left: 0; }
+        nav ul { list-style: none; }
+        nav li { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        nav a { text-decoration: none; color: var(--text-color); font-size: 1.2rem; display: block; }
+        nav a.active { color: var(--primary-color); font-weight: bold; }
 
-        nav ul {
-            list-style: none;
-        }
-
-        nav li {
-            margin-bottom: 20px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--text-color);
-            font-size: 1.2rem;
-            font-weight: bold;
-            display: block;
-            padding: 10px 0;
-        }
-
-        nav a.active {
-            color: var(--primary-color);
-        }
-
-        /* Sobreposição de Menu */
         .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 998;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); display: none; z-index: 998;
         }
+        .menu-overlay.open { display: block; }
 
-        .menu-overlay.open {
-            display: block;
-        }
+        .tab-content { display: none; padding: 15px; }
+        .tab-content.active { display: block; }
 
-        /* Separadores (Páginas) */
-        .tab-content {
-            display: none;
-            padding: 15px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Calendário Mensal Compacto */
+        /* Calendário Mensal (Aumentado) */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             text-align: center;
-            border-collapse: collapse;
+        }
+
+        .weekday-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .weekday {
-            font-size: 0.7rem;
-            color: #888;
-            padding: 5px 0;
+            font-size: 0.75rem;
+            color: var(--gray-text);
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         .day {
-            padding: 8px 0; /* Menor preenchimento para caber */
-            font-weight: bold;
-            font-size: 0.9rem;
-            cursor: pointer;
-            aspect-ratio: 1 / 1;
+            min-height: 70px; /* Aumentado para ocupar mais o ecrã */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #28282b;
-            position: relative;
-        }
-
-        /* Bola que preenche o dia de hoje */
-        .day.today {
-            background-color: #E24A68;
-            border-radius: 50%;
-            color: white;
-            z-index: 1;
-        }
-
-        /* Contentor para os pontos coloridos de eventos */
-        .event-markers-container {
-            display: flex;
-            justify-content: center;
-            gap: 2px;
-            margin-top: 3px;
-            width: 80%;
-            height: 4px;
-        }
-
-        .event-marker {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-        }
-
-        /* Formulários (Separador Inserir) */
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        input[type="text"], input[type="date"], textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 1rem;
-            background-color: #2a2a2d;
-            color: var(--text-color);
-        }
-
-        /* Novo Seletor de Cor Livre */
-        input[type="color"] {
-            border: none;
-            border-radius: 6px;
-            width: 100%;
-            height: 40px;
+            padding-top: 10px;
+            font-size: 1.3rem; /* Números maiores */
             cursor: pointer;
-            background: none;
+            border-bottom: 1px solid #f0efeb;
         }
 
-        textarea {
-            display: none; /* Escondido por defeito */
-            margin-top: 10px;
-            resize: vertical;
+        .day-number {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
-        button.btn-submit {
-            width: 100%;
-            padding: 12px;
+        .day.today .day-number {
             background-color: var(--primary-color);
             color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
             font-weight: bold;
-            cursor: pointer;
         }
+
+        .event-markers-container {
+            display: flex; gap: 3px; margin-top: 5px;
+        }
+        .event-marker {
+            width: 6px; height: 6px; border-radius: 50%;
+        }
+
+        /* Vista Anual */
+        #yearly-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px 10px;
+        }
+        .mini-month-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .mini-calendar { font-size: 0.55rem; text-align: center; }
+        .mini-calendar .weekday { font-size: 0.5rem; margin-bottom: 2px;}
+        .mini-day { padding: 2px 0; }
 
         /* Vista Diária */
         .daily-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color);
         }
-
+        .daily-title-group { display: flex; align-items: center; }
         .btn-back {
-            background: none;
-            border: none;
-            font-size: 1rem;
-            color: var(--primary-color);
-            margin-right: 15px;
-            padding: 5px;
-            cursor: pointer;
+            background: none; border: none; font-size: 1.5rem;
+            color: var(--primary-color); margin-right: 10px; cursor: pointer;
+        }
+        .btn-add-quick {
+            background: none; border: none; font-size: 2rem;
+            color: var(--primary-color); cursor: pointer; font-weight: 300;
         }
 
-        /* Lista de Eventos (Design Mosaico) */
+        /* Eventos na Vista Diária */
         .event-item {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            background-color: #2a2a2d; /* Fundo base */
-            display: grid;
-            grid-template-columns: 5px 1fr;
-            gap: 12px;
+            background-color: #fff;
+            padding: 15px; border-radius: 10px; margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 5px solid;
+        }
+        .event-info { flex-grow: 1; }
+        .event-title { font-weight: bold; font-size: 1.1rem; }
+        .btn-delete {
+            background: none; border: none; color: var(--primary-color);
+            font-size: 1.2rem; cursor: pointer; padding: 10px;
         }
 
-        .event-color-strip {
-            height: 100%;
-            border-radius: 2.5px;
+        /* Formulários e Modal */
+        label { display: block; margin-bottom: 5px; color: var(--gray-text); font-size: 0.9rem;}
+        input[type="text"], input[type="date"], textarea {
+            width: 100%; padding: 12px; margin-bottom: 15px;
+            border: 1px solid var(--border-color); border-radius: 8px;
+            background-color: #fff; font-size: 1rem;
+        }
+        input[type="color"] { width: 100%; height: 50px; border: none; margin-bottom: 15px; background: none;}
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .checkbox-group input { transform: scale(1.3); }
+        button.btn-submit {
+            width: 100%; padding: 15px; background-color: var(--primary-color);
+            color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold;
         }
 
-        .event-content {
-            display: flex;
-            flex-direction: column;
+        /* Modal de Modelos Rápidos */
+        #templatesModal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 1001; align-items: center; justify-content: center;
         }
-
-        .event-title {
-            font-weight: bold;
-            margin-bottom: 4px;
-            color: white;
-            text-transform: uppercase;
+        .modal-content {
+            background: var(--bg-color); width: 85%; border-radius: 12px; padding: 20px; max-height: 80vh; overflow-y: auto;
         }
-
-        .event-value, .event-notes {
-            color: #aaa;
-            font-size: 0.9rem;
+        .template-btn {
+            width: 100%; text-align: left; padding: 15px; margin-bottom: 10px;
+            background: #fff; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem;
+            border-left: 5px solid; cursor: pointer;
         }
-
     </style>
 </head>
 <body>
@@ -298,65 +240,66 @@
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
 
     <header>
-        <div id="monthYearDisplay">Mês Ano</div>
-        <div id="clock">Data • Hora</div>
+        <div class="header-controls">
+            <button class="nav-arrow" onclick="changeMonth(-1)">❮</button>
+            <div id="monthYearDisplay">Mês Ano</div>
+            <button class="nav-arrow" onclick="changeMonth(1)">❯</button>
+        </div>
         <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
     </header>
 
     <nav id="hamburgerMenu">
         <ul>
-            <li><a href="#" class="active" onclick="switchTab('home', this)">Calendário</a></li>
+            <li><a href="#" class="active" onclick="switchTab('home', this)">Vista Mensal</a></li>
+            <li><a href="#" onclick="switchTab('yearly', this)">Vista Anual</a></li>
             <li><a href="#" onclick="switchTab('insert', this)">Inserir Registo</a></li>
         </ul>
     </nav>
 
     <main>
         <section id="tab-home" class="tab-content active">
-            <div class="calendar-grid">
-                <div class="weekday">DOM</div>
-                <div class="weekday">SEG</div>
-                <div class="weekday">TER</div>
-                <div class="weekday">QUA</div>
-                <div class="weekday">QUI</div>
-                <div class="weekday">SEX</div>
-                <div class="weekday">SÁB</div>
+            <div class="weekday-header">
+                <div class="weekday">D</div><div class="weekday">S</div><div class="weekday">T</div>
+                <div class="weekday">Q</div><div class="weekday">Q</div><div class="weekday">S</div><div class="weekday">S</div>
             </div>
-            <div class="calendar-grid" id="calendarDays">
-                </div>
+            <div class="calendar-grid" id="calendarDays"></div>
+        </section>
+
+        <section id="tab-yearly" class="tab-content">
+            <h2 id="yearlyTitle" style="text-align:center; color: var(--primary-color); margin-bottom: 20px;">Ano</h2>
+            <div id="yearly-grid"></div>
         </section>
 
         <section id="tab-daily" class="tab-content">
             <div class="daily-header">
-                <button class="btn-back" onclick="switchTab('home')">❮</button>
-                <h2 id="dailyDateDisplay"></h2>
-            </div>
-            <div id="dailyEventsList">
+                <div class="daily-title-group">
+                    <button class="btn-back" onclick="switchTab('home')">❮</button>
+                    <h2 id="dailyDateDisplay" style="font-size: 1.2rem;"></h2>
                 </div>
+                <button class="btn-add-quick" onclick="openTemplatesModal()">+</button>
+            </div>
+            <div id="dailyEventsList"></div>
         </section>
 
         <section id="tab-insert" class="tab-content">
-            <h2>Novo Registo</h2>
-            <br>
+            <h2 style="color: var(--primary-color); margin-bottom: 15px;">Novo Registo</h2>
             <form id="insertForm">
-                <div class="form-group">
-                    <label for="eventDate">Data</label>
-                    <input type="date" id="eventDate" required>
-                </div>
+                <label>Data</label>
+                <input type="date" id="eventDate" required>
                 
-                <div class="form-group">
-                    <label for="eventColor">Paleta de Cor (Livre)</label>
-                    <input type="color" id="eventColor" value="#4A90E2" required>
-                </div>
+                <label>Cor do Evento</label>
+                <input type="color" id="eventColor" value="#FF3B30" required>
 
-                <div class="form-group">
-                    <label for="eventType">Tipo (Obrigatório)</label>
-                    <input type="text" id="eventType" placeholder="Ex: Trabalho, Reunião, OUTROS" required>
-                    <textarea id="eventNotes" rows="4" placeholder="Escreve o que quiseres aqui..."></textarea>
-                </div>
+                <label>Tipo (Ex: Reunião, OUTROS)</label>
+                <input type="text" id="eventType" required>
+                <textarea id="eventNotes" rows="3" placeholder="Escreve os detalhes aqui..." style="display:none;"></textarea>
 
-                <div class="form-group">
-                    <label for="eventValue">Valor (Opcional)</label>
-                    <input type="text" id="eventValue" placeholder="Ex: 50€, Importante, etc.">
+                <label>Valor / Extra (Opcional)</label>
+                <input type="text" id="eventValue">
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="saveAsTemplate">
+                    <label for="saveAsTemplate" style="margin:0;">Guardar esta seleção (Modelo)</label>
                 </div>
 
                 <button type="submit" class="btn-submit">Guardar</button>
@@ -364,197 +307,260 @@
         </section>
     </main>
 
+    <div id="templatesModal" onclick="closeTemplatesModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <h3 style="margin-bottom: 15px; color: var(--primary-color);">Modelos Guardados</h3>
+            <div id="templatesList"></div>
+            <button onclick="closeTemplatesModal()" style="width: 100%; padding: 10px; margin-top: 10px; background: none; border: none; color: var(--gray-text);">Cancelar</button>
+        </div>
+    </div>
+
     <script>
-        // --- 1. Menu Hambúrguer ---
-        const menu = document.getElementById('hamburgerMenu');
-        const overlay = document.getElementById('menuOverlay');
+        // Navegação e Variáveis Globais
+        let currentDate = new Date();
+        let currentDailyDateStr = ""; // Guarda o dia que está aberto na vista diária
 
         function toggleMenu() {
-            menu.classList.toggle('open');
-            overlay.classList.toggle('open');
+            document.getElementById('hamburgerMenu').classList.toggle('open');
+            document.getElementById('menuOverlay').classList.toggle('open');
         }
 
-        // --- 2. Relógio a contar no topo ---
-        function updateClock() {
-            const now = new Date();
-            const options = { weekday: 'short', month: 'short', day: 'numeric' };
-            const dateStr = now.toLocaleDateString('pt-PT', options);
-            const timeStr = now.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-            
-            // Títulos em maiúsculas
-            const finalDateStr = dateStr.toUpperCase();
-            document.getElementById('clock').innerText = `${finalDateStr} • ${timeStr}`;
-        }
-        setInterval(updateClock, 1000);
-        updateClock(); // Iniciar imediatamente
-
-        // --- 3. Navegação entre Separadores via Menu ---
         function switchTab(tabName, linkElement = null) {
-            // Esconder conteúdos
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            // Tirar o foco de todos os links do menu
             document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
             
-            // Mostrar o separador selecionado
             document.getElementById('tab-' + tabName).classList.add('active');
-            
-            // Atualizar o link ativo
             if (linkElement) {
                 linkElement.classList.add('active');
-                toggleMenu(); // Fechar o menu após a seleção
+                toggleMenu();
             }
 
-            // Se for para a Home, renderizar para mostrar novos marcadores
             if (tabName === 'home') renderCalendar();
+            if (tabName === 'yearly') renderYearly();
         }
 
-        // --- 4. Lógica do Calendário Mensal Compacto ---
-        let currentDate = new Date(); // Usado para navegação se quisermos adicionar depois
-        
+        // Lógica dos Meses (Avançar / Recuar)
+        function changeMonth(direction) {
+            currentDate.setMonth(currentDate.getMonth() + direction);
+            renderCalendar();
+            if(document.getElementById('tab-yearly').classList.contains('active')) {
+                renderYearly();
+            }
+        }
+
+        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        // Renderizar Calendário Mensal
         function renderCalendar() {
-            const today = new Date();
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
+            const today = new Date();
 
-            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
             document.getElementById('monthYearDisplay').innerText = `${monthNames[month]} ${year}`;
 
-            const firstDay = new Date(year, month, 1).getDay(); // Dia da semana do 1º dia
-            const daysInMonth = new Date(year, month + 1, 0).getDate(); // Total de dias no mês
-
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
             const calendarDays = document.getElementById('calendarDays');
             calendarDays.innerHTML = '';
 
-            // Espaços vazios antes do dia 1
             for (let i = 0; i < firstDay; i++) {
                 calendarDays.innerHTML += `<div></div>`;
             }
 
-            // Obter eventos existentes para marcadores
             let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
 
-            // Preencher os dias do mês
             for (let i = 1; i <= daysInMonth; i++) {
                 const dayDiv = document.createElement('div');
                 dayDiv.classList.add('day');
-                dayDiv.innerText = i;
                 
-                // Formato YYYY-MM-DD para referência cruzada
                 const dateStr = `${year}-${String(month+1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 
-                // Se for o dia de hoje, destaca
+                let numDiv = `<div class="day-number">${i}</div>`;
                 if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayDiv.classList.add('today');
+                    numDiv = `<div class="day-number" style="background-color: var(--primary-color); color: white;">${i}</div>`;
                 }
 
-                // --- NOVO: Lógica de Marcadores de Cores ---
+                let markersHTML = '';
                 let dayEvents = allEvents[dateStr] || [];
                 if (dayEvents.length > 0) {
-                    const markersContainer = document.createElement('div');
-                    markersContainer.classList.add('event-markers-container');
-                    
-                    // Mostra até 3 marcadores por dia para não encher
-                    dayEvents.slice(0, 3).forEach(ev => {
-                        const marker = document.createElement('div');
-                        marker.classList.add('event-marker');
-                        marker.style.backgroundColor = ev.color;
-                        markersContainer.appendChild(marker);
+                    markersHTML = '<div class="event-markers-container">';
+                    dayEvents.slice(0, 4).forEach(ev => {
+                        markersHTML += `<div class="event-marker" style="background-color: ${ev.color};"></div>`;
                     });
-                    
-                    dayDiv.appendChild(markersContainer);
+                    markersHTML += '</div>';
                 }
-                // --- FIM DOS MARCADORES ---
 
-                // Ao carregar num dia, abre a vista diária
+                dayDiv.innerHTML = numDiv + markersHTML;
                 dayDiv.onclick = () => openDailyView(dateStr, i, monthNames[month], year);
-                
                 calendarDays.appendChild(dayDiv);
             }
         }
-        renderCalendar(); // Renderizar ao iniciar
 
-        // --- 5. Lógica de "OUTROS" ---
+        // Renderizar Calendário Anual
+        function renderYearly() {
+            const year = currentDate.getFullYear();
+            document.getElementById('yearlyTitle').innerText = year;
+            const yearlyGrid = document.getElementById('yearly-grid');
+            yearlyGrid.innerHTML = '';
+
+            for (let m = 0; m < 12; m++) {
+                const firstDay = new Date(year, m, 1).getDay();
+                const daysInMonth = new Date(year, m + 1, 0).getDate();
+                
+                let monthHTML = `<div class="mini-month"><div class="mini-month-title">${monthNames[m]}</div>`;
+                monthHTML += `<div class="calendar-grid mini-calendar">`;
+                const weekdays = ['D','S','T','Q','Q','S','S'];
+                weekdays.forEach(wd => monthHTML += `<div class="weekday">${wd}</div>`);
+                
+                for (let i = 0; i < firstDay; i++) monthHTML += `<div></div>`;
+                for (let i = 1; i <= daysInMonth; i++) monthHTML += `<div class="mini-day">${i}</div>`;
+                
+                monthHTML += `</div></div>`;
+                yearlyGrid.innerHTML += monthHTML;
+            }
+        }
+
+        renderCalendar(); // Iniciar
+
+        // Lógica Inserir e Modelos
         const typeInput = document.getElementById('eventType');
         const notesInput = document.getElementById('eventNotes');
 
         typeInput.addEventListener('input', function() {
             if (this.value.trim().toUpperCase() === 'OUTROS') {
-                notesInput.style.display = 'block';
-                notesInput.required = true;
+                notesInput.style.display = 'block'; notesInput.required = true;
             } else {
-                notesInput.style.display = 'none';
-                notesInput.required = false;
-                notesInput.value = ''; // Limpa se não for OUTROS
+                notesInput.style.display = 'none'; notesInput.required = false; notesInput.value = '';
             }
         });
 
-        // --- 6. Guardar Registo (Local Storage) ---
         document.getElementById('insertForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
             const date = document.getElementById('eventDate').value;
             const color = document.getElementById('eventColor').value;
             const type = document.getElementById('eventType').value;
             const value = document.getElementById('eventValue').value;
             const notes = document.getElementById('eventNotes').value;
+            const saveTemplate = document.getElementById('saveAsTemplate').checked;
 
             const newEvent = { color, type, value, notes };
 
+            // Guardar o Evento
             let events = JSON.parse(localStorage.getItem('agendaEvents')) || {};
-            
-            if (!events[date]) {
-                events[date] = [];
-            }
+            if (!events[date]) events[date] = [];
             events[date].push(newEvent);
-
             localStorage.setItem('agendaEvents', JSON.stringify(events));
 
-            this.reset(); // Limpa o formulário
-            notesInput.style.display = 'none'; 
-            
-            // Volta para o calendário
+            // Guardar como Modelo se a caixa estiver selecionada
+            if(saveTemplate) {
+                let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
+                templates.push({ color, type, value });
+                localStorage.setItem('agendaTemplates', JSON.stringify(templates));
+            }
+
+            this.reset();
+            notesInput.style.display = 'none';
+            document.getElementById('saveAsTemplate').checked = false;
             switchTab('home');
         });
 
-        // --- 7. Abrir o DIÁRIO (Vista Diária com Design Mosaico) ---
+        // Vista Diária & Eliminar
         function openDailyView(dateStr, day, monthName, year) {
-            document.getElementById('dailyDateDisplay').innerText = `${day} ${monthName} ${year}`;
+            currentDailyDateStr = dateStr;
+            const dateObj = new Date(dateStr);
+            const weekDaysFull = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+            const weekDayName = weekDaysFull[dateObj.getDay()];
+
+            document.getElementById('dailyDateDisplay').innerText = `${weekDayName}, ${day} de ${monthName}`;
             
+            renderDailyEvents();
+            document.getElementById('eventDate').value = dateStr;
+            switchTab('daily');
+        }
+
+        function renderDailyEvents() {
             const dailyEventsList = document.getElementById('dailyEventsList');
             dailyEventsList.innerHTML = ''; 
 
             let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
-            let dayEvents = allEvents[dateStr] || [];
+            let dayEvents = allEvents[currentDailyDateStr] || [];
 
             if (dayEvents.length === 0) {
-                dailyEventsList.innerHTML = '<p style="color: #666; text-align: center; margin-top: 30px;">Não existem registos.</p>';
+                dailyEventsList.innerHTML = '<p style="color: var(--gray-text); text-align: center; margin-top: 50px;">Nenhum Evento</p>';
             } else {
-                dayEvents.forEach(ev => {
+                dayEvents.forEach((ev, index) => {
                     let eventHTML = `
-                        <div class="event-item">
-                            <div class="event-color-strip" style="background-color: ${ev.color};"></div>
-                            <div class="event-content">
+                        <div class="event-item" style="border-left-color: ${ev.color};">
+                            <div class="event-info">
                                 <div class="event-title">${ev.type}</div>
                     `;
-                    if (ev.value) {
-                        eventHTML += `<div class="event-value">${ev.value}</div>`;
-                    }
-                    if (ev.notes) {
-                        eventHTML += `<div class="event-notes">"${ev.notes}"</div>`;
-                    }
-                    eventHTML += `</div></div>`;
+                    if (ev.value) eventHTML += `<div style="color: var(--gray-text); font-size: 0.9rem;">${ev.value}</div>`;
+                    if (ev.notes) eventHTML += `<div style="color: var(--gray-text); font-style: italic; font-size: 0.9rem;">"${ev.notes}"</div>`;
+                    
+                    eventHTML += `</div>
+                            <button class="btn-delete" onclick="deleteEvent('${currentDailyDateStr}', ${index})">🗑️</button>
+                        </div>`;
                     dailyEventsList.innerHTML += eventHTML;
                 });
             }
-
-            // Pré-preencher a data no formulário
-            document.getElementById('eventDate').value = dateStr;
-
-            // Mudar para o separador do Diário
-            switchTab('daily');
         }
 
-        // Preencher data de hoje por defeito
+        function deleteEvent(dateStr, index) {
+            if(confirm("Tens a certeza que queres eliminar este evento?")) {
+                let allEvents = JSON.parse(localStorage.getItem('agendaEvents')) || {};
+                allEvents[dateStr].splice(index, 1);
+                
+                // Se o array ficar vazio, remove a data do objeto para manter limpo
+                if(allEvents[dateStr].length === 0) delete allEvents[dateStr];
+                
+                localStorage.setItem('agendaEvents', JSON.stringify(allEvents));
+                renderDailyEvents(); // Atualiza a lista na hora
+            }
+        }
+
+        // Lógica do Modal de Modelos (Botão +)
+        function openTemplatesModal() {
+            const templatesList = document.getElementById('templatesList');
+            let templates = JSON.parse(localStorage.getItem('agendaTemplates')) || [];
+            
+            templatesList.innerHTML = '';
+            if(templates.length === 0) {
+                templatesList.innerHTML = '<p style="color: var(--gray-text); text-align:center;">Ainda não guardaste nenhum modelo.</p>';
+            } else {
+                templates.forEach(t => {
+                    const btn = document.createElement('button');
+                    btn.className = 'template-btn';
+                    btn.style.borderLeftColor = t.color;
+                    btn.innerHTML = `<strong>${t.type}</strong> ${t.value ? '- ' + t.value : ''}`;
+                    btn.onclick = () => addFromTemplate(t);
+                    templatesList.appendChild(btn);
+                });
+            }
+            document.getElementById('templatesModal').style.display = 'flex';
+        }
+
+        function closeTemplatesModal(e) {
+            if (!e || e.target.id === 'templatesModal') {
+                document.getElementById('templatesModal').style.display = 'none';
+            }
+        }
+
+        function addFromTemplate(templateData) {
+            let events = JSON.parse(localStorage.getItem('agendaEvents')) || {};
+            if (!events[currentDailyDateStr]) events[currentDailyDateStr] = [];
+            
+            events[currentDailyDateStr].push({
+                color: templateData.color,
+                type: templateData.type,
+                value: templateData.value,
+                notes: ''
+            });
+            
+            localStorage.setItem('agendaEvents', JSON.stringify(events));
+            renderDailyEvents();
+            closeTemplatesModal();
+        }
+
         document.getElementById('eventDate').valueAsDate = new Date();
     </script>
 </body>
